@@ -98,7 +98,7 @@ async function loadPropertiesTable() {
 
         tbody.innerHTML = properties.map(p => {
             const mainImage = p.images && p.images.length > 0 
-                ? `http://localhost:5000${p.images[0]}` 
+                ? `https://visionsite-backend.onrender.com${p.images[0]}` 
                 : 'https://via.placeholder.com/60';
             
             return `
@@ -191,7 +191,7 @@ async function loadPropertyData(propertyId) {
                 const imageDiv = document.createElement('div');
                 imageDiv.className = 'image-preview-item';
                 imageDiv.innerHTML = `
-                    <img src="http://localhost:5000${img}" alt="Imagem ${index + 1}" onerror="this.src='https://via.placeholder.com/150'" style="width:150px;height:150px;object-fit:cover;">
+                    <img src="https://visionsite-backend.onrender.com${img}" alt="Imagem ${index + 1}" onerror="this.src='https://via.placeholder.com/150'" style="width:150px;height:150px;object-fit:cover;">
                     <span class="image-name">Imagem ${index + 1}</span>
                 `;
                 preview.appendChild(imageDiv);

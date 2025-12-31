@@ -37,7 +37,7 @@ async function loadFeaturedProperties() {
         
         container.innerHTML = properties.map(property => {
             const mainImage = property.images && property.images.length > 0 
-                ? `http://localhost:5000${property.images[0]}`
+                ? `https://visionsite-backend.onrender.com${property.images[0]}`
                 : 'https://via.placeholder.com/400x280?text=Sem+Imagem';
             
             return `
@@ -157,7 +157,7 @@ function displaySearchResults(properties) {
     
     container.innerHTML = properties.map(property => {
         const mainImage = property.images && property.images.length > 0 
-            ? `http://localhost:5000${property.images[0]}`
+            ? `https://visionsite-backend.onrender.com${property.images[0]}`
             : 'https://via.placeholder.com/400x280?text=Sem+Imagem';
         
         return `
@@ -212,7 +212,7 @@ async function loadPropertyDetail() {
         const gallery = document.getElementById('propertyGallery');
         if (gallery) {
             const mainImage = property.images && property.images.length > 0 
-                ? `http://localhost:5000${property.images[0]}`
+                ? `https://visionsite-backend.onrender.com${property.images[0]}`
                 : 'https://via.placeholder.com/1200x500?text=Sem+Imagem';
             gallery.style.backgroundImage = `url('${mainImage}')`;
             
