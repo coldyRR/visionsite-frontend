@@ -101,7 +101,7 @@ async function loadPropertiesTable() {
     const thOwner = document.getElementById('thOwner'); // Coluna "Cadastrado Por"
     
     try {
-        const response = await propertiesAPI.getAll();
+        const response = await propertiesAPI.getAll({ active: 'all' });
         const allProperties = response.data;
 
         // FILTRAGEM POR PERMISSÃO
