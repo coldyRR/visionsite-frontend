@@ -371,3 +371,58 @@ ul{list-style:none}
     .carousel-btn { display: none; } /* No celular usa o dedo */
     .properties-grid.carousel-mode .property-card { min-width: 260px; }
 }
+/* --- ESTILO DA IMAGEM NA PÁGINA SOBRE --- */
+
+.about-image-container {
+    position: relative;
+    /* 👇 Troque 'fundo-sobre.jpg' pela imagem que você quer usar de fundo 👇 */
+    background-image: url('../img/fundo-sobre.jpg');
+    background-size: cover;
+    background-position: center;
+    border-radius: 12px;
+    overflow: hidden; /* Garante que nada saia dos cantos arredondados */
+    min-height: 400px; /* Altura mínima para ficar imponente */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5); /* Sombra chique */
+}
+
+/* Camada escura sobre o fundo (Overlay) */
+.about-image-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6); /* Ajuste o 0.6 para mais claro ou mais escuro */
+    z-index: 1;
+}
+
+/* A imagem da sede em si */
+.about-real-image {
+    position: relative;
+    z-index: 2; /* Fica por cima da camada escura */
+    max-width: 80%; /* Não deixa a imagem ficar gigante */
+    max-height: 80%;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3); /* Sombra na própria imagem */
+    transition: transform 0.3s ease;
+}
+
+/* Efeito ao passar o mouse */
+.about-image-container:hover .about-real-image {
+    transform: scale(1.02); /* Um leve zoom para dar vida */
+}
+
+/* Ajuste para celular */
+@media (max-width: 768px) {
+    .about-image-container {
+        min-height: 300px;
+        margin-top: 30px;
+    }
+    .about-real-image {
+        max-width: 90%;
+    }
+}
