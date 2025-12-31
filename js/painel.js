@@ -1,9 +1,23 @@
 // ============================================
-// PAINEL - ATUALIZADO
+// PAINEL - VERSÃO CLOUDINARY FINAL
 // ============================================
 
+const API_BASE_URL = "https://visionsite-backend.onrender.com";
 let editingPropertyId = null;
 let propertyImages = [];
+
+// --- HELPER: Função inteligente para arrumar imagens ---
+function getImageUrl(imagePath) {
+    if (!imagePath) return 'https://via.placeholder.com/60';
+    
+    // Se já tem http (Vem do Cloudinary), usa direto
+    if (imagePath.startsWith('http')) {
+        return imagePath;
+    }
+    
+    // Se não tem http (Imagem antiga local), coloca o servidor na frente
+    return `${API_BASE_URL}${imagePath}`;
+}
 
 // Load Dashboard
 async function loadPainelDashboard() {
@@ -97,8 +111,9 @@ async function loadPropertiesTable() {
         }
 
         tbody.innerHTML = properties.map(p => {
+            // USA O HELPER AQUI PRA ARRUMAR A FOTO DA TABELA
             const mainImage = p.images && p.images.length > 0 
-                ? `https://visionsite-backend.onrender.com${p.images[0]}` 
+                ? getImageUrl(p.images[0]) 
                 : 'https://via.placeholder.com/60';
             
             return `
@@ -190,8 +205,9 @@ async function loadPropertyData(propertyId) {
             property.images.forEach((img, index) => {
                 const imageDiv = document.createElement('div');
                 imageDiv.className = 'image-preview-item';
+                // USA O HELPER AQUI TAMBÉM PRA ARRUMAR O PREVIEW DA EDIÇÃO
                 imageDiv.innerHTML = `
-                    <img src="https://visionsite-backend.onrender.com${img}" alt="Imagem ${index + 1}" onerror="this.src='https://via.placeholder.com/150'" style="width:150px;height:150px;object-fit:cover;">
+                    <img src="${getImageUrl(img)}" alt="Imagem ${index + 1}" onerror="this.src='https://via.placeholder.com/150'" style="width:150px;height:150px;object-fit:cover;">
                     <span class="image-name">Imagem ${index + 1}</span>
                 `;
                 preview.appendChild(imageDiv);
