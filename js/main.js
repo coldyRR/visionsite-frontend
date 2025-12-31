@@ -1,6 +1,19 @@
 // ============================================
-// VISION IMÓVEIS - MAIN.JS
+// VISION IMÓVEIS - MAIN.JS (Versão Cloudinary)
 // ============================================
+
+// --- HELPER: Função inteligente para arrumar imagens ---
+function getImageUrl(imagePath, placeholderSize = '400x280') {
+    if (!imagePath) return `https://via.placeholder.com/${placeholderSize}?text=Sem+Imagem`;
+    
+    // Se já tem http (Vem do Cloudinary ou link externo), usa direto
+    if (imagePath.startsWith('http')) {
+        return imagePath;
+    }
+    
+    // Se não tem http (Imagem antiga local), coloca o servidor na frente
+    return `https://visionsite-backend.onrender.com${imagePath}`;
+}
 
 // Menu Mobile
 document.addEventListener('DOMContentLoaded', function() {
@@ -36,9 +49,8 @@ async function loadFeaturedProperties() {
         }
         
         container.innerHTML = properties.map(property => {
-            const mainImage = property.images && property.images.length > 0 
-                ? `https://visionsite-backend.onrender.com${property.images[0]}`
-                : 'https://via.placeholder.com/400x280?text=Sem+Imagem';
+            // Usa a função inteligente aqui
+            const mainImage = getImageUrl(property.images && property.images[0]);
             
             return `
             <div class="property-card" onclick="window.location.href='imovel.html?id=${property._id}'">
@@ -74,7 +86,7 @@ async function loadFeaturedProperties() {
             <div style="grid-column: 1/-1; text-align: center; padding: 60px 20px;">
                 <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: #ff6b6b; margin-bottom: 20px;"></i>
                 <h3 style="color: #fff; margin-bottom: 10px;">Erro ao carregar imóveis</h3>
-                <p style="color: #888; margin-bottom: 20px;">Verifique se o backend está rodando na porta 5000</p>
+                <p style="color: #888; margin-bottom: 20px;">Verifique se o backend está rodando</p>
                 <button onclick="loadFeaturedProperties()" class="btn-primary">
                     <i class="fas fa-sync"></i> Tentar Novamente
                 </button>
@@ -156,9 +168,8 @@ function displaySearchResults(properties) {
     if (noResults) noResults.style.display = 'none';
     
     container.innerHTML = properties.map(property => {
-        const mainImage = property.images && property.images.length > 0 
-            ? `https://visionsite-backend.onrender.com${property.images[0]}`
-            : 'https://via.placeholder.com/400x280?text=Sem+Imagem';
+        // Usa a função inteligente aqui também
+        const mainImage = getImageUrl(property.images && property.images[0]);
         
         return `
         <div class="property-card" onclick="window.location.href='imovel.html?id=${property._id}'">
@@ -211,9 +222,8 @@ async function loadPropertyDetail() {
         // Gallery
         const gallery = document.getElementById('propertyGallery');
         if (gallery) {
-            const mainImage = property.images && property.images.length > 0 
-                ? `https://visionsite-backend.onrender.com${property.images[0]}`
-                : 'https://via.placeholder.com/1200x500?text=Sem+Imagem';
+            // E usa a função inteligente aqui também (tamanho maior pro placeholder)
+            const mainImage = getImageUrl(property.images && property.images[0], '1200x500');
             gallery.style.backgroundImage = `url('${mainImage}')`;
             
             if (property.images && property.images.length > 1) {
