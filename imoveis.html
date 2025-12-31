@@ -3,62 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Imóveis - VISION Negócios Imobiliários</title>
-    
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="favicon.png">
-    
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-    
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- CSS -->
+    <title>Imóveis - VISION</title>
     <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <!-- Header -->
     <header class="header">
         <div class="container">
-            <div class="header-content">
-                <div class="logo">
+            <nav class="nav">
+                <div class="logo" onclick="window.location.href='index.html'">
                     <span class="logo-icon">V</span>
                     <span class="logo-text">VISION</span>
                 </div>
-                
-                <nav class="nav">
-                    <a href="index.html">Início</a>
-                    <a href="imoveis.html" class="active">Imóveis</a>
-                    <a href="sobre.html">Sobre</a>
-                    <a href="contato.html">Contato</a>
-                </nav>
-                
-                <a href="login.html" class="btn-header">Área do Corretor</a>
-            </div>
+                <ul class="nav-menu">
+                    <li><a href="index.html" class="nav-link">Início</a></li>
+                    <li><a href="imoveis.html" class="nav-link active">Imóveis</a></li>
+                    <li><a href="#" class="nav-link">Sobre</a></li>
+                    <li><a href="#" class="nav-link">Contato</a></li>
+                </ul>
+                <div class="nav-actions">
+                    <a href="login.html" class="btn-login">Área do Corretor</a>
+                </div>
+            </nav>
         </div>
     </header>
 
-    <!-- Hero Section -->
-    <section class="hero-small">
+    <div class="page-top">
         <div class="container">
-            <h1>Nossos Imóveis</h1>
-            <p>Encontre o imóvel perfeito para você</p>
-        </div>
-    </section>
-
-    <!-- Filters -->
-    <section class="filters-section">
-        <div class="container">
-            <div class="filters-box">
-                <h3><i class="fas fa-filter"></i> Filtrar Imóveis</h3>
-                
-                <form id="filterForm" class="filters-form">
-                    <div class="filter-group">
-                        <label>Tipo</label>
-                        <select name="type" id="filterType">
+            <div style="margin-bottom: 40px;">
+                <h1 class="page-title-main">Nossos Imóveis</h1>
+                <p class="page-subtitle-main">Encontre o imóvel perfeito para você</p>
+            </div>
+            
+            <div class="filter-bar">
+                <h3 class="filter-title"><i class="fas fa-filter"></i> Filtrar Imóveis</h3>
+                <div class="filter-grid">
+                    <div>
+                        <label style="display: block; margin-bottom: 8px; color: #888; font-size: 0.9rem;">Tipo</label>
+                        <select id="filterType" style="width: 100%; padding: 12px; background: #000; border: 1px solid #333; color: #fff; border-radius: 6px; font-family: 'Inter', sans-serif;">
                             <option value="">Todos</option>
                             <option value="apartamento">Apartamento</option>
                             <option value="casa">Casa</option>
@@ -66,82 +49,73 @@
                             <option value="comercial">Comercial</option>
                         </select>
                     </div>
-                    
-                    <div class="filter-group">
-                        <label>Localização</label>
-                        <input type="text" name="location" id="filterLocation" placeholder="Cidade...">
+                    <div>
+                        <label style="display: block; margin-bottom: 8px; color: #888; font-size: 0.9rem;">Localização</label>
+                        <input type="text" id="filterLocation" placeholder="Cidade..." style="width: 100%; padding: 12px; background: #000; border: 1px solid #333; color: #fff; border-radius: 6px; font-family: 'Inter', sans-serif;">
                     </div>
-                    
-                    <div class="filter-group">
-                        <label>Preço Máximo</label>
-                        <input type="number" name="maxPrice" id="filterMaxPrice" placeholder="0">
+                    <div>
+                        <label style="display: block; margin-bottom: 8px; color: #888; font-size: 0.9rem;">Preço Máximo</label>
+                        <input type="number" id="filterMaxPrice" placeholder="0" style="width: 100%; padding: 12px; background: #000; border: 1px solid #333; color: #fff; border-radius: 6px; font-family: 'Inter', sans-serif;">
                     </div>
-                    
-                    <button type="submit" class="btn">
-                        <i class="fas fa-search"></i> Filtrar
-                    </button>
-                </form>
-            </div>
-        </div>
-    </section>
-
-    <!-- Properties Grid -->
-    <section class="properties-section">
-        <div class="container">
-            <div id="propertiesGrid" class="properties-grid">
-                <!-- Loader -->
-                <div class="loader-container">
-                    <div class="loader"></div>
-                    <p>Carregando imóveis...</p>
+                    <div style="display: flex; align-items: flex-end;">
+                        <button onclick="applyFilters()" class="btn-primary" style="width: 100%; padding: 14px;">
+                            <i class="fas fa-search"></i> Filtrar
+                        </button>
+                    </div>
                 </div>
             </div>
+            
+            <div class="properties-grid" id="searchResults"></div>
+            
+            <div id="noResults" class="empty-state" style="display: none;">
+                <i class="fas fa-search"></i>
+                <h3 style="font-size: 1.5rem; margin-bottom: 10px; font-family: var(--font-display);">Nenhum imóvel encontrado</h3>
+                <p>Tente ajustar os filtros de busca</p>
+            </div>
         </div>
-    </section>
+    </div>
 
-    <!-- Footer -->
     <footer class="footer">
         <div class="container">
-            <div class="footer-content">
-                <div class="footer-col">
+            <div class="footer-grid">
+                <div class="footer-column">
                     <div class="logo">
                         <span class="logo-icon">V</span>
                         <span class="logo-text">VISION</span>
                     </div>
-                    <p>Transformando visões em realidade desde 2024.</p>
+                    <p class="footer-description">Transformando visões em realidade no mercado imobiliário.</p>
+                    <div class="social-links">
+                        <a href="https://wa.me/553497683827" target="_blank" class="social-link"><i class="fab fa-whatsapp"></i></a>
+                        <a href="https://www.instagram.com/visionnegociosimob/" target="_blank" class="social-link"><i class="fab fa-instagram"></i></a>
+                    </div>
                 </div>
-                
-                <div class="footer-col">
-                    <h4>Links Rápidos</h4>
-                    <ul>
+                <div class="footer-column">
+                    <h4 class="footer-title">Navegação</h4>
+                    <ul class="footer-links">
                         <li><a href="index.html">Início</a></li>
                         <li><a href="imoveis.html">Imóveis</a></li>
-                        <li><a href="sobre.html">Sobre</a></li>
-                        <li><a href="contato.html">Contato</a></li>
+                        <li><a href="login.html">Área do Corretor</a></li>
                     </ul>
                 </div>
-                
-                <div class="footer-col">
-                    <h4>Contato</h4>
-                    <ul>
-                        <li><i class="fas fa-phone"></i> (34) 99999-9999</li>
+                <div class="footer-column">
+                    <h4 class="footer-title">Contato</h4>
+                    <ul class="footer-contact">
+                        <li><i class="fas fa-phone"></i> (34) 97683827</li>
                         <li><i class="fas fa-envelope"></i> contato@vision.com.br</li>
-                        <li><i class="fas fa-map-marker-alt"></i> Uberlândia, MG</li>
                     </ul>
                 </div>
             </div>
-            
             <div class="footer-bottom">
                 <p>&copy; 2024 VISION Negócios Imobiliários. Todos os direitos reservados.</p>
             </div>
         </div>
     </footer>
 
-    <!-- WhatsApp Button -->
-    <a href="https://wa.me/5534999999999" class="whatsapp-btn" target="_blank">
+    <a href="https://wa.me/553497683827" class="whatsapp-float" target="_blank">
         <i class="fab fa-whatsapp"></i>
     </a>
 
-    <!-- Scripts -->
+    <!-- ✅ SCRIPTS ADICIONADOS AQUI -->
     <script src="js/api.js"></script>
     <script src="js/main.js"></script>
 </body>
