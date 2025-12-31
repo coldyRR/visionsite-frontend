@@ -400,4 +400,109 @@ ul{list-style:none}
         background-attachment: scroll; /* No celular rola normal pra não bugar */
         min-height: 300px;
     }
+}/* =========================================
+   MENU MOBILE (BOTÃO HAMBÚRGUER)
+   ========================================= */
+
+/* 1. Estilo do Botão (Escondido no PC) */
+.mobile-menu-toggle {
+    display: none; /* No computador ninguém vê */
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    z-index: 2000; /* Fica por cima de TUDO */
+    background: #000; /* Fundo preto */
+    color: #fff; /* Ícone branco */
+    border: 1px solid #333;
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+}
+
+/* 2. Regras SÓ PARA CELULAR (Telas menores que 768px) */
+@media (max-width: 768px) {
+    
+    /* Faz o botão aparecer no celular */
+    .mobile-menu-toggle {
+        display: block;
+    }
+
+    /* Esconde a barra lateral (joga pra esquerda fora da tela) */
+    .sidebar {
+        position: fixed;
+        left: -280px; 
+        top: 0;
+        height: 100vh;
+        z-index: 1000;
+        transition: left 0.3s ease;
+        width: 260px;
+        box-shadow: 5px 0 15px rgba(0,0,0,0.5);
+    }
+
+    /* Quando clicar, adiciona essa classe pra trazer a barra de volta */
+    .sidebar.active {
+        left: 0; 
+    }
+
+    /* Ajusta o conteúdo pra ocupar a tela toda */
+    .main-content {
+        margin-left: 0 !important;
+        width: 100%;
+        padding-top: 70px; /* Espaço pro botão não ficar em cima do texto */
+    }
+}
+/* =========================================
+   MENU MOBILE (BOTÃO HAMBÚRGUER)
+   ========================================= */
+
+/* 1. Estilo do Botão (Escondido no PC) */
+.mobile-menu-toggle {
+    display: none; /* No computador ninguém vê */
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    z-index: 2000; /* Fica por cima de TUDO */
+    background: #000; /* Fundo preto */
+    color: #fff; /* Ícone branco */
+    border: 1px solid #333;
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+}
+
+/* 2. Regras SÓ PARA CELULAR (Telas menores que 768px) */
+@media (max-width: 768px) {
+    
+    /* Faz o botão aparecer no celular */
+    .mobile-menu-toggle {
+        display: block;
+    }
+
+    /* Esconde a barra lateral (joga pra esquerda fora da tela) */
+    .sidebar {
+        position: fixed;
+        left: -280px; 
+        top: 0;
+        height: 100vh;
+        z-index: 1000;
+        transition: left 0.3s ease;
+        width: 260px;
+        box-shadow: 5px 0 15px rgba(0,0,0,0.5);
+    }
+
+    /* Quando clicar, adiciona essa classe pra trazer a barra de volta */
+    .sidebar.active {
+        left: 0; 
+    }
+
+    /* Ajusta o conteúdo pra ocupar a tela toda */
+    .main-content {
+        margin-left: 0 !important;
+        width: 100%;
+        padding-top: 70px; /* Espaço pro botão não ficar em cima do texto */
+    }
 }
