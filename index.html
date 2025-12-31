@@ -19,8 +19,8 @@
                 <ul class="nav-menu" id="navMenu">
                     <li><a href="index.html" class="nav-link active">Início</a></li>
                     <li><a href="imoveis.html" class="nav-link">Imóveis</a></li>
-                    <li><a href="#" class="nav-link">Sobre</a></li>
-                    <li><a href="#" class="nav-link">Contato</a></li>
+                    <li><a href="sobre.html" class="nav-link">Sobre</a></li>
+                    <li><a href="javascript:void(0)" onclick="openContactModal()" class="nav-link">Contato</a></li>
                 </ul>
                 <div class="nav-actions">
                     <a href="login.html" class="btn-login">Área do Corretor</a>
@@ -61,7 +61,8 @@
                     <div class="search-form">
                         <div class="search-field">
                             <label>Localização</label>
-                            <input type="text" placeholder="Cidade, bairro..." id="searchLocation">
+                            <input type="text" placeholder="Cidade, bairro..." id="searchLocation" list="locationsList">
+                            <datalist id="locationsList"></datalist>
                         </div>
                         <div class="search-field">
                             <label>Tipo de Imóvel</label>
@@ -171,7 +172,7 @@
                 <p class="cta-text">Nossa equipe está preparada para ajudar você em cada etapa dessa jornada</p>
                 <div class="cta-buttons">
                     <a href="imoveis.html" class="btn-primary">Explorar Imóveis</a>
-                    <button class="btn-outline">Falar com Especialista</button>
+                    <button class="btn-outline" onclick="openContactModal()">Falar com Especialista</button>
                 </div>
             </div>
         </div>
@@ -202,8 +203,8 @@
                     <ul class="footer-links">
                         <li><a href="index.html">Início</a></li>
                         <li><a href="imoveis.html">Imóveis</a></li>
-                        <li><a href="#">Sobre</a></li>
-                        <li><a href="#">Contato</a></li>
+                        <li><a href="sobre.html">Sobre</a></li>
+                        <li><a href="javascript:void(0)" onclick="openContactModal()">Contato</a></li>
                         <li><a href="login.html">Área do Corretor</a></li>
                     </ul>
                 </div>
@@ -220,16 +221,16 @@
                     <h4 class="footer-title">Contato</h4>
                     <ul class="footer-contact">
                         <li><i class="fas fa-phone"></i> (34) 97683827</li>
-                        <li><i class="fas fa-envelope"></i> <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="90f3fffee4f1e4ffd0e6f9e3f9fffef9fdffe6f5f9e3bef3fffdbef2e2">[email&#160;protected]</a></li>
+                        <li><i class="fas fa-envelope"></i> <a href="mailto:contato@vision.com.br">contato@vision.com.br</a></li>
                         <li><i class="fas fa-map-marker-alt"></i> Av. Francisco Galassi, 2260 - Morada da Colina<br>Uberlândia - MG</li>
                     </ul>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2025 VISION Negócios Imobiliários. Todos os direitos reservados.</p>
+                <p>© 2025 VISION Negócios Imobiliários. Todos os direitos reservados.</p>
                 <div class="footer-bottom-links">
-                    <a href="#">Política de Privacidade</a>
-                    <a href="#">Termos de Uso</a>
+                    <a href="politica.html">Política de Privacidade</a>
+                    <a href="termos.html">Termos de Uso</a>
                 </div>
             </div>
         </div>
@@ -246,12 +247,38 @@
     <script src="js/main.js"></script>
 
     <script>
-        // Iniciar carregamento dos imóveis assim que a página abrir
         document.addEventListener('DOMContentLoaded', () => {
             if(typeof loadFeaturedProperties === 'function') {
                 loadFeaturedProperties();
             }
         });
     </script>
+
+    <div id="contactModalFull" class="contact-modal-overlay">
+        <div class="contact-box">
+            <button class="close-modal-btn" onclick="closeContactModal()"><i class="fas fa-times"></i></button>
+            <h2>Fale Conosco</h2>
+            <p style="color: #aaa; margin-bottom: 20px;">Escolha a melhor forma de atendimento:</p>
+            
+            <div class="contact-grid">
+                <a href="https://wa.me/553497683827" target="_blank" class="contact-btn-link btn-whatsapp">
+                    <i class="fab fa-whatsapp" style="font-size: 1.5rem;"></i> Conversar no WhatsApp
+                </a>
+                
+                <a href="https://www.instagram.com/visionnegociosimob/" target="_blank" class="contact-btn-link btn-instagram">
+                    <i class="fab fa-instagram" style="font-size: 1.5rem;"></i> Seguir no Instagram
+                </a>
+                
+                <a href="https://www.google.com/maps/search/?api=1&query=Av.+Francisco+Galassi,+2260+-+Morada+da+Colina,+Uberlândia+-+MG" target="_blank" class="contact-btn-link btn-maps">
+                    <i class="fas fa-map-marker-alt" style="font-size: 1.5rem;"></i> Ver Localização
+                </a>
+            </div>
+            
+            <div style="margin-top: 25px; padding-top: 20px; border-top: 1px solid #333; color: #888; font-size: 0.9rem;">
+                <p>Av. Francisco Galassi, 2260 - Morada da Colina</p>
+                <p>Uberlândia - MG</p>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

@@ -16,14 +16,19 @@
                     <span class="logo-icon">V</span>
                     <span class="logo-text">VISION</span>
                 </div>
-                <ul class="nav-menu">
+                <ul class="nav-menu" id="navMenu">
                     <li><a href="index.html" class="nav-link">Início</a></li>
                     <li><a href="imoveis.html" class="nav-link active">Imóveis</a></li>
-                    <li><a href="#" class="nav-link">Sobre</a></li>
-                    <li><a href="#" class="nav-link">Contato</a></li>
+                    <li><a href="sobre.html" class="nav-link">Sobre</a></li>
+                    <li><a href="javascript:void(0)" onclick="openContactModal()" class="nav-link">Contato</a></li>
                 </ul>
                 <div class="nav-actions">
                     <a href="login.html" class="btn-login">Área do Corretor</a>
+                    <button class="menu-toggle" id="menuToggle">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
                 </div>
             </nav>
         </div>
@@ -51,7 +56,8 @@
                     </div>
                     <div>
                         <label style="display: block; margin-bottom: 8px; color: #888; font-size: 0.9rem;">Localização</label>
-                        <input type="text" id="filterLocation" placeholder="Cidade..." style="width: 100%; padding: 12px; background: #000; border: 1px solid #333; color: #fff; border-radius: 6px; font-family: 'Inter', sans-serif;">
+                        <input type="text" id="filterLocation" placeholder="Cidade..." list="locationsList" style="width: 100%; padding: 12px; background: #000; border: 1px solid #333; color: #fff; border-radius: 6px; font-family: 'Inter', sans-serif;">
+                        <datalist id="locationsList"></datalist>
                     </div>
                     <div>
                         <label style="display: block; margin-bottom: 8px; color: #888; font-size: 0.9rem;">Preço Máximo</label>
@@ -94,6 +100,8 @@
                     <ul class="footer-links">
                         <li><a href="index.html">Início</a></li>
                         <li><a href="imoveis.html">Imóveis</a></li>
+                        <li><a href="sobre.html">Sobre</a></li>
+                        <li><a href="javascript:void(0)" onclick="openContactModal()">Contato</a></li>
                         <li><a href="login.html">Área do Corretor</a></li>
                     </ul>
                 </div>
@@ -107,6 +115,10 @@
             </div>
             <div class="footer-bottom">
                 <p>&copy; 2025 VISION Negócios Imobiliários. Todos os direitos reservados.</p>
+                <div class="footer-bottom-links">
+                    <a href="politica.html">Política de Privacidade</a>
+                    <a href="termos.html">Termos de Uso</a>
+                </div>
             </div>
         </div>
     </footer>
@@ -115,17 +127,42 @@
         <i class="fab fa-whatsapp"></i>
     </a>
 
-    <!-- ✅ SCRIPTS ADICIONADOS AQUI -->
     <script src="js/api.js"></script>
     <script src="js/main.js"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Verifica se a função existe e manda buscar
             if(typeof loadSearchResults === 'function') {
                 loadSearchResults();
             }
         });
     </script>
+
+    <div id="contactModalFull" class="contact-modal-overlay">
+        <div class="contact-box">
+            <button class="close-modal-btn" onclick="closeContactModal()"><i class="fas fa-times"></i></button>
+            <h2>Fale Conosco</h2>
+            <p style="color: #aaa; margin-bottom: 20px;">Escolha a melhor forma de atendimento:</p>
+            
+            <div class="contact-grid">
+                <a href="https://wa.me/553497683827" target="_blank" class="contact-btn-link btn-whatsapp">
+                    <i class="fab fa-whatsapp" style="font-size: 1.5rem;"></i> Conversar no WhatsApp
+                </a>
+                
+                <a href="https://www.instagram.com/visionnegociosimob/" target="_blank" class="contact-btn-link btn-instagram">
+                    <i class="fab fa-instagram" style="font-size: 1.5rem;"></i> Seguir no Instagram
+                </a>
+                
+                <a href="https://www.google.com/maps/search/?api=1&query=Av.+Francisco+Galassi,+2260+-+Morada+da+Colina,+Uberlândia+-+MG" target="_blank" class="contact-btn-link btn-maps">
+                    <i class="fas fa-map-marker-alt" style="font-size: 1.5rem;"></i> Ver Localização
+                </a>
+            </div>
+            
+            <div style="margin-top: 25px; padding-top: 20px; border-top: 1px solid #333; color: #888; font-size: 0.9rem;">
+                <p>Av. Francisco Galassi, 2260 - Morada da Colina</p>
+                <p>Uberlândia - MG</p>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
