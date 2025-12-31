@@ -118,5 +118,14 @@
     <!-- ✅ SCRIPTS ADICIONADOS AQUI -->
     <script src="js/api.js"></script>
     <script src="js/main.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Verifica se a função existe e manda buscar
+            if(typeof loadSearchResults === 'function') {
+                loadSearchResults();
+            }
+        });
+    </script>
 </body>
 </html>

@@ -38,7 +38,7 @@ async function loadFeaturedProperties() {
     console.log('📡 Buscando imóveis em destaque...');
     
     try {
-        const response = await propertiesAPI.getFeatured();
+        const response = await propertiesAPI.getAll();
         const properties = response.data;
         
         console.log('✅ Imóveis carregados:', properties.length);
