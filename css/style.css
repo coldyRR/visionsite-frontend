@@ -103,10 +103,12 @@ ul{list-style:none}
 .whatsapp-float:hover{transform:scale(1.1)}
 
 /* Pages */
-.page-top{margin-top:100px;min-height:100vh;padding:40px 0}
-.page-title-main{font-family:var(--font-display);font-size:3rem;margin-bottom:15px}
-.page-subtitle-main{color:#888;font-size:1.1rem;margin-bottom:40px}
-
+.page-top {
+    margin-top: 80px; /* Espaço pro menu fixo não tapar o título */
+    min-height: auto; /* IMPORTANTE: Remove a altura de tela cheia */
+    padding: 60px 0; /* Um respiro em cima e embaixo */
+    text-align: center; /* Garante que o título fica no meio */
+}
 /* Property Detail */
 .property-gallery{width:100%;height:500px;background-size:cover;background-position:center;border-radius:16px;margin-bottom:40px}
 .property-content-grid{display:grid;grid-template-columns:1fr 380px;gap:40px}
