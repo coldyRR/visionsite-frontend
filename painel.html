@@ -206,5 +206,88 @@
 
     <script src="js/api.js"></script>
     <script src="js/painel.js"></script>
+    <body>
+    <button class="mobile-menu-toggle" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <div class="painel-container">
+        ```
+
+---
+
+### PASSO 2: A Mágica do CSS (`css/style.css`)
+
+Vá lá no final do seu **`style.css`**. Copia e cola esse bloco gigante aqui. Ele diz pro site: *"Se a tela for pequena (celular), esconde a barra lateral e só mostra quando eu mandar"*.
+
+```css
+/* =========================================
+   RESPONSIVIDADE DO PAINEL (MOBILE)
+   ========================================= */
+
+/* Estilo do Botão Hambúrguer (Escondido no PC) */
+.mobile-menu-toggle {
+    display: none; /* No PC ninguém vê */
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    z-index: 2000; /* Fica acima de tudo */
+    background: #000;
+    color: #fff;
+    border: 1px solid #333;
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+}
+
+/* Regras SÓ PARA CELULAR (Telas menores que 768px) */
+@media (max-width: 768px) {
+    
+    /* Faz o botão aparecer */
+    .mobile-menu-toggle {
+        display: block;
+    }
+
+    /* Barra Lateral: Escondida por padrão */
+    .sidebar {
+        position: fixed;
+        left: -280px; /* Joga ela pra fora da tela na esquerda */
+        top: 0;
+        height: 100vh;
+        z-index: 1000;
+        transition: left 0.3s ease; /* Animação suave */
+        width: 260px;
+        box-shadow: 5px 0 15px rgba(0,0,0,0.5);
+    }
+
+    /* Quando a gente ativar o menu, ele entra na tela */
+    .sidebar.active {
+        left: 0; /* Volta pra posição visível */
+    }
+
+    /* Conteúdo Principal: Ocupa tudo e desgruda da esquerda */
+    .main-content {
+        margin-left: 0 !important; /* Remove o buraco da esquerda */
+        width: 100%;
+        padding: 20px;
+        padding-top: 70px; /* Abre espaço pro botão lá em cima */
+    }
+
+    /* Ajuste nos Cards do Dashboard (pra não ficarem espremidos) */
+    .stats-cards {
+        grid-template-columns: 1fr; /* Um card por linha */
+    }
+
+    /* Ajuste na Tabela (pra dar scroll horizontal se precisar) */
+    .table-container {
+        overflow-x: auto;
+    }
+    
+    .table {
+        min-width: 600px; /* Força a tabela a ter tamanho mínimo */
+    }
+}
 </body>
 </html>

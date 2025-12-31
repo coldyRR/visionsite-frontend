@@ -449,3 +449,23 @@ function closePropertyModal() { document.getElementById('propertyModal').classLi
 function editProperty(id) { openPropertyModal(id); }
 
 document.addEventListener('DOMContentLoaded', loadPainelDashboard);
+// ============================================
+// MENU MOBILE
+// ============================================
+function toggleSidebar() {
+    const sidebar = document.querySelector('.sidebar');
+    const overlay = document.getElementById('mobileOverlay'); // Opcional, mas bom ter
+    
+    // Liga/Desliga a classe 'active' que criamos no CSS
+    sidebar.classList.toggle('active');
+}
+
+// Fecha o menu automaticamente quando clica em uma opção (pra não ficar na frente)
+document.querySelectorAll('.menu-item').forEach(item => {
+    item.addEventListener('click', () => {
+        // Se estiver no celular (tela pequena), fecha o menu ao clicar
+        if (window.innerWidth <= 768) {
+            document.querySelector('.sidebar').classList.remove('active');
+        }
+    });
+});
