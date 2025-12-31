@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VISION - Diagnóstico CSS</title>
+    
+    <!-- CSS Externo - Tentativa 1: Caminho Relativo -->
+    <link rel="stylesheet" href="css/styles.css" id="css-relativo">
+    
+    <!-- CSS Externo - Tentativa 2: Caminho Absoluto (descomente se necessário) -->
+    <!-- <link rel="stylesheet" href="/css/styles.css" id="css-absoluto"> -->
+    
+    <!-- Fontes Google -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* CSS de diagnóstico inline */
+        .diagnostic-box {
+            background: linear-gradient(135deg, #ff6b6b, #ff8787);
+            color: white;
+            padding: 30px;
+            margin: 20px;
+            border-radius: 12px;
+            font-family: Arial, sans-serif;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+        
+        .diagnostic-box h2 {
+            margin: 0 0 15px 0;
+            font-size: 24px;
+        }
+        
+        .diagnostic-box p {
+            margin: 10px 0;
+            line-height: 1.6;
+        }
+        
+        .success {
+            background: linear-gradient(135deg, #51cf66, #37b24d) !important;
+        }
+        
+        .test-button {
+            background: white;
+            color: #333;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+        
+        .test-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body>
+    <!-- Box de Diagnóstico -->
+    <div class="diagnostic-box" id="diagnosticBox">
+        <h2>🔍 Diagnóstico de Carregamento CSS</h2>
+        <p id="status">Verificando CSS...</p>
+        <button class="test-button" onclick="runDiagnostic()">Executar Diagnóstico</button>
+        <div id="results"></div>
+    </div>
+
+    <!-- Conteúdo do Site Real -->
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <div class="logo" id="siteLogo">
+                    <span class="logo-icon">V</span>
+                    <span class="logo-text" id="siteLogoText">VISION</span>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="index.html" class="nav-link active">Início</a></li>
+                    <li><a href="imoveis.html" class="nav-link">Imóveis</a></li>
+                    <li><a href="corretores.html" class="nav-link">Corretores</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1 class="hero-title">
+                <span class="hero-main">VISION</span>
+                <span class="hero-description">Negócios Imobiliários</span>
+            </h1>
+        </div>
+    </section>
+
+    <script>
+        function runDiagnostic() {
+            const results = document.getElementById('results');
+            const status = document.getElementById('status');
+            const box = document.getElementById('diagnosticBox');
+            
+            let html = '<hr style="margin: 20px 0; border-color: rgba(255,255,255,0.3);">';
+            html += '<h3 style="margin-top: 20px;">Resultados:</h3>';
+            
+            // Teste 1: Verificar se o arquivo CSS foi carregado
+            const cssLink = document.getElementById('css-relativo');
+            const cssLoaded = cssLink && cssLink.sheet;
+            
+            html += `<p>✓ Link CSS presente: ${cssLink ? 'SIM' : 'NÃO'}</p>`;
+            html += `<p>✓ Stylesheet carregado: ${cssLoaded ? 'SIM ✅' : 'NÃO ❌'}</p>`;
+            
+            // Teste 2: Verificar caminho do CSS
+            if (cssLink) {
+                html += `<p>✓ Caminho do CSS: ${cssLink.href}</p>`;
+            }
+            
+            // Teste 3: Verificar se as classes CSS funcionam
+            const header = document.querySelector('.header');
+            const headerStyles = header ? window.getComputedStyle(header) : null;
+            const hasStyles = headerStyles && headerStyles.position === 'fixed';
+            
+            html += `<p>✓ Header encontrado: ${header ? 'SIM' : 'NÃO'}</p>`;
+            html += `<p>✓ Estilos aplicados: ${hasStyles ? 'SIM ✅' : 'NÃO ❌'}</p>`;
+            
+            // Teste 4: Verificar fontes
+            const logoText = document.querySelector('.logo-text');
+            const fontFamily = logoText ? window.getComputedStyle(logoText).fontFamily : '';
+            const hasCinzel = fontFamily.includes('Cinzel');
+            
+            html += `<p>✓ Fonte Cinzel carregada: ${hasCinzel ? 'SIM ✅' : 'NÃO ❌'}</p>`;
+            
+            // Resumo
+            if (cssLoaded && hasStyles && hasCinzel) {
+                status.textContent = '✅ CSS CARREGADO COM SUCESSO!';
+                box.className = 'diagnostic-box success';
+                html += '<h3 style="margin-top: 20px;">🎉 Tudo funcionando perfeitamente!</h3>';
+                html += '<p>O CSS está carregado corretamente. Role para baixo para ver o site.</p>';
+            } else {
+                status.textContent = '❌ PROBLEMA DETECTADO';
+                html += '<h3 style="margin-top: 20px;">⚠️ Como Corrigir:</h3>';
+                html += '<ol style="text-align: left; line-height: 2;">';
+                html += '<li><strong>Use um servidor local</strong> (Live Server, Python, etc)</li>';
+                html += '<li>Não abra o arquivo direto do Windows Explorer</li>';
+                html += '<li>Certifique-se que a pasta "css" está no mesmo nível do index.html</li>';
+                html += '<li>Verifique se o arquivo "css/styles.css" existe</li>';
+                html += '</ol>';
+            }
+            
+            results.innerHTML = html;
+        }
+        
+        // Executar diagnóstico automaticamente ao carregar
+        window.addEventListener('load', () => {
+            setTimeout(runDiagnostic, 500);
+        });
+    </script>
+</body>
+</html>

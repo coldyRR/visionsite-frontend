@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - VISION</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="login-page">
+        <div class="login-container">
+            <div class="login-header">
+                <span class="login-logo-icon">V</span>
+                <h1 class="login-title">Área do Corretor</h1>
+                <p class="login-subtitle">Acesse sua conta para gerenciar imóveis</p>
+            </div>
+            
+            <div id="loginAlert" class="alert"></div>
+            
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username"><i class="fas fa-user"></i> Usuário</label>
+                    <input type="text" id="username" required placeholder="Digite seu usuário" value="admin">
+                </div>
+                
+                <div class="form-group">
+                    <label for="password"><i class="fas fa-lock"></i> Senha</label>
+                    <input type="password" id="password" required placeholder="Digite sua senha" value="admin123">
+                </div>
+                
+                <button type="submit" class="btn-primary" id="loginButton" style="width: 100%;">
+                    <i class="fas fa-sign-in-alt"></i> Entrar
+                </button>
+            </form>
+            
+            <a href="index.html" class="back-link">
+                <i class="fas fa-arrow-left"></i> Voltar para o site
+            </a>
+            
+            <div style="margin-top:30px;padding-top:20px;border-top:1px solid #333;text-align:center">
+                <p style="color:#666;font-size:0.85rem;margin-bottom:10px">Credenciais de teste:</p>
+                <p style="color:#888;font-size:0.8rem">
+                    <strong>Admin:</strong> admin / admin123
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script>
+        // Variáveis globais
+        const loginForm = document.getElementById('loginForm');
+        const loginAlert = document.getElementById('loginAlert');
+        const loginButton = document.getElementById('loginButton');
+
+        // Handler do formulário de login
+        loginForm.addEventListener('submit', async function(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            
+            // Validação básica
+            if (!username || !password) {
+                showAlert('Por favor, preencha todos os campos', 'error');
+                return;
+            }
+            
+            // Desabilitar botão e mostrar loading
+            loginButton.disabled = true;
+            loginButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Entrando...';
+            
+            try {
+                console.log('🔄 Tentando fazer login...');
+                console.log('URL da API:', 'http://localhost:5000/api/auth/login');
+                
+                const response = await fetch('http://localhost:5000/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, password })
+                });
+                
+                console.log('📡 Resposta recebida:', response.status);
+                
+                const data = await response.json();
+                console.log('📦 Dados:', data);
+                
+                if (!response.ok) {
+                    throw new Error(data.message || 'Erro ao fazer login');
+                }
+                
+                if (data.success && data.token) {
+                    console.log('✅ Login bem-sucedido!');
+                    
+                    // Salvar token e usuário
+                    localStorage.setItem('vision_token', data.token);
+                    localStorage.setItem('vision_user', JSON.stringify(data.user));
+                    
+                    showAlert('Login realizado! Redirecionando...', 'success');
+                    
+                    // Redirecionar baseado no role
+                    setTimeout(() => {
+                        if (data.user.role === 'admin') {
+                            console.log('➡️ Redirecionando para admin.html');
+                            window.location.href = 'admin.html';
+                        } else {
+                            console.log('➡️ Redirecionando para painel.html');
+                            window.location.href = 'painel.html';
+                        }
+                    }, 1000);
+                } else {
+                    throw new Error('Resposta inválida do servidor');
+                }
+                
+            } catch (error) {
+                console.error('❌ Erro no login:', error);
+                showAlert(error.message || 'Usuário ou senha incorretos', 'error');
+                document.getElementById('password').value = '';
+                
+                // Re-habilitar botão
+                loginButton.disabled = false;
+                loginButton.innerHTML = '<i class="fas fa-sign-in-alt"></i> Entrar';
+            }
+        });
+
+        // Função para mostrar alertas
+        function showAlert(message, type) {
+            loginAlert.className = `alert alert-${type} show`;
+            loginAlert.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i> ${message}`;
+            
+            if (type === 'error') {
+                setTimeout(() => {
+                    loginAlert.className = 'alert';
+                }, 5000);
+            }
+        }
+
+        // Verificar se já está logado
+        window.addEventListener('DOMContentLoaded', function() {
+            const token = localStorage.getItem('vision_token');
+            const userStr = localStorage.getItem('vision_user');
+            
+            if (token && userStr) {
+                try {
+                    const user = JSON.parse(userStr);
+                    console.log('✅ Usuário já logado:', user.username);
+                    
+                    // Redirecionar
+                    if (user.role === 'admin') {
+                        window.location.href = 'admin.html';
+                    } else {
+                        window.location.href = 'painel.html';
+                    }
+                } catch (e) {
+                    console.log('❌ Token inválido, limpando...');
+                    localStorage.removeItem('vision_token');
+                    localStorage.removeItem('vision_user');
+                }
+            }
+        });
+
+        // Log para debug
+        console.log('📄 Página de login carregada');
+        console.log('🔧 API URL configurada para: http://localhost:5000/api');
+    </script>
+</body>
+</html>

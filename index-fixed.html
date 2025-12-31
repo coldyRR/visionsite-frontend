@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>VISION - Negócios Imobiliários</title>
+    
+    <!-- CSS Principal - SEMPRE use servidor local (Live Server, Python, etc) -->
+    <link rel="stylesheet" href="css/styles.css" type="text/css">
+    
+    <!-- Fontes Google - Pré-conectar para performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- CSS Crítico Inline (fallback caso o styles.css não carregue) -->
+    <style>
+        /* CSS mínimo inline para garantir que algo apareça */
+        body { 
+            font-family: 'Inter', Arial, sans-serif; 
+            margin: 0; 
+            padding: 0;
+            background: #000;
+            color: #fff;
+        }
+        .container { 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            padding: 0 20px; 
+        }
+        .header {
+            background: #000;
+            padding: 20px 0;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #c0c0c0;
+        }
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #000 0%, #1a1a1a 100%);
+            padding-top: 80px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Noscript warning -->
+    <noscript>
+        <div style="background: #ff6b6b; color: white; padding: 20px; text-align: center;">
+            ⚠️ Por favor, habilite o JavaScript para usar todas as funcionalidades do site.
+        </div>
+    </noscript>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <div class="logo" id="siteLogo">
+                    <span class="logo-icon">V</span>
+                    <span class="logo-text" id="siteLogoText">VISION</span>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="index.html" class="nav-link active">Início</a></li>
+                    <li><a href="imoveis.html" class="nav-link">Imóveis</a></li>
+                    <li><a href="corretores.html" class="nav-link">Corretores</a></li>
+                    <li><a href="sobre.html" class="nav-link">Sobre</a></li>
+                    <li><a href="contato.html" class="nav-link">Contato</a></li>
+                </ul>
+                <div class="nav-actions">
+                    <a href="login.html" class="btn-login">Área do Corretor</a>
+                    <button class="menu-toggle" id="menuToggle">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-background">
+            <div class="hero-grid-overlay"></div>
+            <div class="hero-particles">
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-badge">VISION Negócios Imobiliários</div>
+                <h1 class="hero-title">
+                    <span class="hero-main" data-text="Transformando">Transformando</span>
+                    <span class="hero-main" data-text="Visões em">Visões em</span>
+                    <span class="hero-main hero-gradient" data-text="Realidade">Realidade</span>
+                </h1>
+                <p class="hero-description">
+                    Excelência e sofisticação em cada negócio imobiliário.<br>
+                    Encontre o imóvel dos seus sonhos com quem entende de visão.
+                </p>
+                <div class="hero-search">
+                    <div class="search-tabs">
+                        <button class="search-tab active" data-type="venda">
+                            <span class="tab-icon">🏠</span>
+                            <span>Comprar</span>
+                        </button>
+                        <button class="search-tab" data-type="aluguel">
+                            <span class="tab-icon">🔑</span>
+                            <span>Alugar</span>
+                        </button>
+                    </div>
+                    <div class="search-form">
+                        <div class="search-field">
+                            <label>Localização</label>
+                            <input type="text" placeholder="Cidade, bairro...">
+                        </div>
+                        <div class="search-field">
+                            <label>Tipo de Imóvel</label>
+                            <select>
+                                <option>Todos</option>
+                                <option>Apartamento</option>
+                                <option>Casa</option>
+                                <option>Terreno</option>
+                                <option>Comercial</option>
+                            </select>
+                        </div>
+                        <div class="search-field">
+                            <label>Preço até</label>
+                            <input type="text" placeholder="R$ 0,00">
+                        </div>
+                        <button class="btn-search">
+                            <span>Buscar Imóveis</span>
+                            <span class="btn-arrow">→</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="hero-scroll-indicator">
+            <span>Role para explorar</span>
+            <div class="scroll-arrow">↓</div>
+        </div>
+    </section>
+
+    <!-- Featured Properties -->
+    <section class="section properties-featured">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-label">Portfólio Premium</div>
+                <h2 class="section-title">Imóveis em Destaque</h2>
+                <p class="section-subtitle">Seleção exclusiva dos melhores imóveis disponíveis</p>
+            </div>
+            <div class="properties-grid" id="featuredProperties">
+                <!-- Properties will be loaded dynamically -->
+            </div>
+            <div class="section-footer">
+                <a href="imoveis.html" class="btn-secondary">
+                    <span>Ver Todos os Imóveis</span>
+                    <span class="btn-arrow">→</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="section stats-section">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" data-target="1250">0</div>
+                    <div class="stat-label">Imóveis Vendidos</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" data-target="850">0</div>
+                    <div class="stat-label">Famílias Felizes</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" data-target="15">0</div>
+                    <div class="stat-label">Anos de Experiência</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" data-target="98">0</div>
+                    <div class="stat-label">% de Satisfação</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="section features-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Por que escolher a VISION?</h2>
+                <p class="section-subtitle">Diferenciais que fazem toda a diferença</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🏆</div>
+                    <h3 class="feature-title">Excelência Comprovada</h3>
+                    <p class="feature-description">Mais de 15 anos de experiência no mercado imobiliário com reconhecimento nacional.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <h3 class="feature-title">Segurança Total</h3>
+                    <p class="feature-description">Todos os imóveis são verificados e documentados com máximo rigor jurídico.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💼</div>
+                    <h3 class="feature-title">Corretores Especializados</h3>
+                    <p class="feature-description">Equipe altamente qualificada e certificada para atender suas necessidades.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <h3 class="feature-title">Tecnologia Avançada</h3>
+                    <p class="feature-description">Plataforma moderna com tours virtuais e sistema de busca inteligente.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="section cta-section">
+        <div class="container">
+            <div class="cta-content">
+                <h2 class="cta-title">Pronto para encontrar seu imóvel ideal?</h2>
+                <p class="cta-text">Nossa equipe está pronta para ajudar você a realizar seus sonhos.</p>
+                <div class="cta-buttons">
+                    <a href="imoveis.html" class="btn-primary">Explorar Imóveis</a>
+                    <a href="contato.html" class="btn-outline">Falar com Especialista</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <div class="footer-logo">
+                        <span class="logo-icon">V</span>
+                        <span class="logo-text" id="footerLogoText">VISION</span>
+                    </div>
+                    <p class="footer-description" id="footerDescription">
+                        Transformando visões em realidade no mercado imobiliário há mais de 15 anos.
+                    </p>
+                    <div class="footer-social">
+                        <a href="#" class="social-link">Facebook</a>
+                        <a href="#" class="social-link">Instagram</a>
+                        <a href="#" class="social-link">LinkedIn</a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h3 class="footer-title">Links Rápidos</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Início</a></li>
+                        <li><a href="imoveis.html">Imóveis</a></li>
+                        <li><a href="corretores.html">Corretores</a></li>
+                        <li><a href="sobre.html">Sobre</a></li>
+                        <li><a href="contato.html">Contato</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3 class="footer-title">Tipos de Imóveis</h3>
+                    <ul class="footer-links">
+                        <li><a href="imoveis.html?type=apartamento">Apartamentos</a></li>
+                        <li><a href="imoveis.html?type=casa">Casas</a></li>
+                        <li><a href="imoveis.html?type=terreno">Terrenos</a></li>
+                        <li><a href="imoveis.html?type=comercial">Comerciais</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3 class="footer-title">Contato</h3>
+                    <ul class="footer-contact">
+                        <li id="footerPhone">📞 (34) 3231-4567</li>
+                        <li id="footerEmail">✉️ contato@visaoimoveis.com.br</li>
+                        <li id="footerAddress">📍 Av. Principal, 1000 - Centro<br>Uberlândia - MG</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 <span id="footerCopyright">VISION Negócios Imobiliários</span>. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="js/data.js"></script>
+    <script src="js/app.js"></script>
+    
+    <!-- CSS Loading Check Script -->
+    <script>
+        // Verificar se o CSS foi carregado corretamente
+        window.addEventListener('load', function() {
+            const header = document.querySelector('.header');
+            const styles = window.getComputedStyle(header);
+            
+            // Se o header não está fixed, o CSS não carregou
+            if (styles.position !== 'fixed') {
+                console.error('❌ CSS não carregado! Usando servidor local (Live Server)?');
+                
+                // Mostrar alerta visual
+                const alert = document.createElement('div');
+                alert.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    background: #ff6b6b;
+                    color: white;
+                    padding: 15px;
+                    text-align: center;
+                    z-index: 10000;
+                    font-family: Arial, sans-serif;
+                    font-weight: bold;
+                `;
+                alert.innerHTML = '⚠️ CSS NÃO CARREGADO! Use um servidor local (Live Server, Python, etc). <a href="diagnostic.html" style="color: white; text-decoration: underline;">Ver Diagnóstico</a>';
+                document.body.insertBefore(alert, document.body.firstChild);
+            } else {
+                console.log('✅ CSS carregado com sucesso!');
+            }
+        });
+    </script>
+</body>
+</html>

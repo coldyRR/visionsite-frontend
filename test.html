@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste CSS - VISION</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        /* Teste inline para verificar se o problema é o CSS externo */
+        .test-box {
+            background: red;
+            color: white;
+            padding: 20px;
+            margin: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-box">
+        Se você vê isso em VERMELHO com texto branco, o CSS inline funciona.
+    </div>
+    
+    <div class="container">
+        <h1 class="hero-title">
+            Se este texto está estilizado (fonte Cinzel), o CSS externo FUNCIONA!
+        </h1>
+    </div>
+    
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <div class="logo">
+                    <span class="logo-icon">V</span>
+                    <span class="logo-text">VISION</span>
+                </div>
+            </nav>
+        </div>
+    </header>
+</body>
+</html>

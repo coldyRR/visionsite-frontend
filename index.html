@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VISION - Negócios Imobiliários</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <div class="logo" onclick="window.location.href='index.html'">
+                    <span class="logo-icon">V</span>
+                    <span class="logo-text">VISION</span>
+                </div>
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="index.html" class="nav-link active">Início</a></li>
+                    <li><a href="imoveis.html" class="nav-link">Imóveis</a></li>
+                    <li><a href="#" class="nav-link">Sobre</a></li>
+                    <li><a href="#" class="nav-link">Contato</a></li>
+                </ul>
+                <div class="nav-actions">
+                    <a href="login.html" class="btn-login">Área do Corretor</a>
+                    <button class="menu-toggle" id="menuToggle">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="hero-background">
+            <div class="hero-grid-overlay"></div>
+            <div class="hero-particles">
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-badge">VISION Negócios Imobiliários</div>
+                <h1 class="hero-title">
+                    <span class="hero-main">Transformando</span>
+                    <span class="hero-main">Visões em</span>
+                    <span class="hero-main hero-gradient">Realidade</span>
+                </h1>
+                <p class="hero-description">
+                    Excelência e sofisticação em cada negócio imobiliário.<br>
+                    Encontre o imóvel dos seus sonhos com quem entende de visão.
+                </p>
+                <div class="hero-search">
+                    <div class="search-form">
+                        <div class="search-field">
+                            <label>Localização</label>
+                            <input type="text" placeholder="Cidade, bairro..." id="searchLocation">
+                        </div>
+                        <div class="search-field">
+                            <label>Tipo de Imóvel</label>
+                            <select id="searchType">
+                                <option value="">Todos</option>
+                                <option value="apartamento">Apartamento</option>
+                                <option value="casa">Casa</option>
+                                <option value="terreno">Terreno</option>
+                                <option value="comercial">Comercial</option>
+                            </select>
+                        </div>
+                        <div class="search-field">
+                            <label>Preço até</label>
+                            <input type="text" placeholder="R$ 0,00" id="searchPrice">
+                        </div>
+                        <button class="btn-search" onclick="performSearch()">
+                            <span>Buscar</span>
+                            <span class="btn-arrow">→</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="hero-scroll-indicator">
+            <span>Role para explorar</span>
+            <div class="scroll-arrow">↓</div>
+        </div>
+    </section>
+
+    <section class="section properties-featured">
+        <div class="container">
+            <div class="section-header centered">
+                <div class="section-label">Portfólio Premium</div>
+                <h2 class="section-title">Imóveis em Destaque</h2>
+                <p class="section-subtitle">Seleção exclusiva dos melhores imóveis disponíveis</p>
+            </div>
+            
+            <div class="properties-grid" id="featuredProperties"></div>
+
+            <div class="section-footer" style="text-align: center; margin-top: 40px;">
+                <a href="imoveis.html" class="btn-secondary">
+                    <span>Ver Todos os Imóveis</span>
+                    <span class="btn-arrow">→</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="section stats-section">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">1.250</div>
+                    <div class="stat-label">Imóveis Vendidos</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">850</div>
+                    <div class="stat-label">Clientes Satisfeitos</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">25</div>
+                    <div class="stat-label">Anos de Mercado</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">42</div>
+                    <div class="stat-label">Corretores Especializados</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section why-us">
+        <div class="container">
+            <div class="section-header centered">
+                <h2 class="section-title">Por que escolher a VISION?</h2>
+                <p class="section-subtitle">Excelência e confiança em cada negócio</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🏆</div>
+                    <h3 class="feature-title">Experiência Comprovada</h3>
+                    <p class="feature-text">Mais de 25 anos de atuação no mercado imobiliário, com milhares de negócios bem-sucedidos.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔐</div>
+                    <h3 class="feature-title">Segurança Jurídica</h3>
+                    <p class="feature-text">Equipe jurídica especializada garantindo tranquilidade em todas as etapas do processo.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">👥</div>
+                    <h3 class="feature-title">Corretores Qualificados</h3>
+                    <p class="feature-text">Profissionais certificados e especializados prontos para realizar o seu sonho.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💎</div>
+                    <h3 class="feature-title">Portfólio Premium</h3>
+                    <p class="feature-text">Seleção exclusiva dos melhores imóveis nas melhores localizações.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section cta-section">
+        <div class="container">
+            <div class="cta-content">
+                <h2 class="cta-title">Pronto para encontrar seu imóvel ideal?</h2>
+                <p class="cta-text">Nossa equipe está preparada para ajudar você em cada etapa dessa jornada</p>
+                <div class="cta-buttons">
+                    <a href="imoveis.html" class="btn-primary">Explorar Imóveis</a>
+                    <button class="btn-outline">Falar com Especialista</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-column">
+                    <div class="logo">
+                        <span class="logo-icon">V</span>
+                        <span class="logo-text">VISION</span>
+                    </div>
+                    <p class="footer-description">
+                        Transformando visões em realidade no mercado imobiliário há mais de 25 anos.
+                    </p>
+                    <div class="social-links">
+                        <a href="https://wa.me/553497683827" target="_blank" class="social-link" title="WhatsApp">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                        <a href="https://www.instagram.com/visionnegociosimob/" target="_blank" class="social-link" title="Instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h4 class="footer-title">Navegação</h4>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Início</a></li>
+                        <li><a href="imoveis.html">Imóveis</a></li>
+                        <li><a href="#">Sobre</a></li>
+                        <li><a href="#">Contato</a></li>
+                        <li><a href="login.html">Área do Corretor</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4 class="footer-title">Imóveis</h4>
+                    <ul class="footer-links">
+                        <li><a href="imoveis.html?type=apartamento">Apartamentos</a></li>
+                        <li><a href="imoveis.html?type=casa">Casas</a></li>
+                        <li><a href="imoveis.html?type=terreno">Terrenos</a></li>
+                        <li><a href="imoveis.html?type=comercial">Comerciais</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4 class="footer-title">Contato</h4>
+                    <ul class="footer-contact">
+                        <li><i class="fas fa-phone"></i> (34) 97683827</li>
+                        <li><i class="fas fa-envelope"></i> <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="90f3fffee4f1e4ffd0e6f9e3f9fffef9fdffe6f5f9e3bef3fffdbef2e2">[email&#160;protected]</a></li>
+                        <li><i class="fas fa-map-marker-alt"></i> Av. Francisco Galassi, 2260 - Morada da Colina<br>Uberlândia - MG</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 VISION Negócios Imobiliários. Todos os direitos reservados.</p>
+                <div class="footer-bottom-links">
+                    <a href="#">Política de Privacidade</a>
+                    <a href="#">Termos de Uso</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <a href="https://wa.me/553497683827?text=Olá! Vim do site e gostaria de mais informações." 
+       class="whatsapp-float" 
+       target="_blank"
+       title="Fale conosco no WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloud
