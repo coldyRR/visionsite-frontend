@@ -1,22 +1,24 @@
 // ============================================
-// PAINEL - VERSÃO FINAL (LEADS CORRIGIDOS)
+// PAINEL - VERSÃO FINAL COMPLETA (Leads + Brokers OK)
 // ============================================
 
 const API_BASE_URL = "https://visionsite-backend.onrender.com";
 let editingPropertyId = null;
 let propertyImages = [];
 
+// --- HELPER: Imagens ---
 function getImageUrl(imagePath) {
     if (!imagePath) return 'https://via.placeholder.com/60';
     if (imagePath.startsWith('http')) return imagePath;
     return `${API_BASE_URL}${imagePath}`;
 }
 
+// --- HELPER: Preço ---
 function formatPrice(value) {
     return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
 }
 
-// --- LOAD DASHBOARD ---
+// --- DASHBOARD ---
 async function loadPainelDashboard() {
     if (!authAPI.isAuthenticated()) {
         window.location.href = 'login.html';
@@ -73,7 +75,7 @@ function showPainelSection(section) {
         
         if(section === 'properties') loadPropertiesTable();
         if(section === 'leads') loadLeads();
-        if(section === 'brokers') loadBrokers();
+        if(section === 'brokers') loadBrokers(); // AGORA VAI FUNCIONAR!
         if(section === 'dashboard') updateDashboardStats();
     }
 }
@@ -120,7 +122,7 @@ async function togglePropertyActive(id, active) {
     updateDashboardStats();
 }
 
-// --- LEADS (CLIENTES) - CORRIGIDO ---
+// --- LEADS (CLIENTES) ---
 async function loadLeads() {
     const container = document.getElementById('leadsContainer');
     try {
@@ -133,14 +135,11 @@ async function loadLeads() {
         }
 
         container.innerHTML = appointments.map(a => {
-            // Tenta pegar o nome do imóvel de todas as formas possíveis
-            let imovelNome = 'Imóvel Excluído ou Não Encontrado';
+            let imovelNome = 'Imóvel Excluído';
             if (a.propertyTitle) imovelNome = a.propertyTitle;
             else if (a.propertyId && a.propertyId.title) imovelNome = a.propertyId.title;
             
-            // Link WhatsApp
-            const wppMsg = `Olá ${a.clientName}! Recebemos seu interesse no imóvel: ${imovelNome}.`;
-            const wppLink = `https://wa.me/55${a.clientPhone.replace(/\D/g, '')}?text=${encodeURIComponent(wppMsg)}`;
+            const wppLink = `https://wa.me/55${a.clientPhone.replace(/\D/g, '')}?text=${encodeURIComponent(`Olá ${a.clientName}! Sobre o imóvel: ${imovelNome}`)}`;
 
             return `
                 <div class="lead-card" style="background:#141414;border:1px solid #333;border-radius:12px;padding:20px;margin-bottom:15px;">
@@ -162,10 +161,96 @@ async function loadLeads() {
             `;
         }).join('');
     } catch (error) {
-        console.error(error);
         container.innerHTML = '<div class="empty-state">Erro ao carregar leads.</div>';
     }
 }
+
+// --- BROKERS (USUÁRIOS) - ADICIONADO DE VOLTA ---
+async function loadBrokers() {
+    const container = document.getElementById('brokersContainer');
+    try {
+        const response = await usersAPI.getAll();
+        const users = response.data;
+
+        if (users.length === 0) {
+            container.innerHTML = '<div class="empty-state">Nenhum usuário.</div>';
+            return;
+        }
+
+        container.innerHTML = `
+            <table class="table">
+                <thead><tr><th>Nome</th><th>E-mail</th><th>Tipo</th><th>Ações</th></tr></thead>
+                <tbody>
+                    ${users.map(u => `
+                        <tr>
+                            <td><strong>${u.name}</strong></td>
+                            <td>${u.email}</td>
+                            <td><span class="badge badge-${u.role === 'admin' ? 'venda' : 'aluguel'}">${u.role}</span></td>
+                            <td>
+                                <button class="btn-icon" onclick="editBroker('${u._id}')"><i class="fas fa-edit"></i></button>
+                                <button class="btn-icon delete" onclick="confirmDeleteBroker('${u._id}')"><i class="fas fa-trash"></i></button>
+                            </td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+        `;
+    } catch (error) {
+        container.innerHTML = '<div class="empty-state">Erro ao carregar usuários.</div>';
+    }
+}
+
+function openBrokerModal(id=null) {
+    const modal = document.getElementById('brokerModal');
+    document.getElementById('brokerForm').reset();
+    document.getElementById('brokerModalTitle').textContent = id ? 'Editar Usuário' : 'Novo Usuário';
+    
+    if(id) {
+        usersAPI.getById(id).then(res => {
+            const u = res.data;
+            document.getElementById('brokerId').value = u._id;
+            document.getElementById('brokerName').value = u.name;
+            document.getElementById('brokerUsername').value = u.username;
+            document.getElementById('brokerEmail').value = u.email;
+            document.getElementById('brokerRole').value = u.role;
+        });
+    }
+    modal.classList.add('active');
+}
+
+async function saveBroker(e) {
+    e.preventDefault();
+    const id = document.getElementById('brokerId').value;
+    const data = {
+        name: document.getElementById('brokerName').value,
+        username: document.getElementById('brokerUsername').value,
+        email: document.getElementById('brokerEmail').value,
+        role: document.getElementById('brokerRole').value,
+        password: document.getElementById('brokerPassword').value
+    };
+    if(!data.password) delete data.password;
+
+    try {
+        if(id) await usersAPI.update(id, data);
+        else await usersAPI.create(data);
+        alert('Usuário salvo!');
+        document.getElementById('brokerModal').classList.remove('active');
+        loadBrokers();
+    } catch(err) {
+        alert('Erro: ' + err.message);
+    }
+}
+
+async function confirmDeleteBroker(id) {
+    if(confirm('Excluir usuário?')) {
+        await usersAPI.delete(id);
+        loadBrokers();
+    }
+}
+
+function closeBrokerModal() { document.getElementById('brokerModal').classList.remove('active'); }
+function editBroker(id) { openBrokerModal(id); }
+
 
 // --- MODAL DE IMÓVEIS (EDITAR/CRIAR) ---
 function openPropertyModal(id=null) {
