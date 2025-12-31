@@ -2,7 +2,7 @@
 // API CLIENT - Comunicação com Backend
 // ============================================
 
-const API_URL = 'https://visionsite-backend.onrender.com';
+const API_URL = "https://visionsite-backend.onrender.com/api";
 
 // Obter token do localStorage
 const getToken = () => {
