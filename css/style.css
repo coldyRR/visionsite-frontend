@@ -373,99 +373,31 @@ ul{list-style:none}
     .carousel-btn { display: none; } /* No celular usa o dedo */
     .properties-grid.carousel-mode .property-card { min-width: 260px; }
 }
-/* --- ESTILO DA IMAGEM NA PÁGINA SOBRE --- */
+/* --- EFEITO JANELA (PARALLAX) --- */
 
-.about-image-container {
-    position: relative;
-    /* 👇 Troque 'fundo-sobre.jpg' pela imagem que você quer usar de fundo 👇 */
-    background-image: url('../img/fundo-sobre.jpg');
-    background-size: cover;
+.about-parallax-window {
+    width: 100%;
+    min-height: 500px; /* Altura da janela (aumente se quiser ver mais foto) */
+    
+    /* A MÁGICA DA FOTO */
+    background-image: url('../img/fachada.jpg');
+    background-attachment: fixed; /* ISSO QUE FAZ O EFEITO JANELA */
     background-position: center;
-    border-radius: 12px;
-    overflow: hidden; /* Garante que nada saia dos cantos arredondados */
-    min-height: 400px; /* Altura mínima para ficar imponente */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5); /* Sombra chique */
-}
-
-/* Camada escura sobre o fundo (Overlay) */
-.about-image-container::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.6); /* Ajuste o 0.6 para mais claro ou mais escuro */
-    z-index: 1;
-}
-
-/* A imagem da sede em si */
-.about-real-image {
+    background-repeat: no-repeat;
+    background-size: cover; /* Faz a foto preencher o buraco sem esticar */
+    
+    /* ESTILO "CAIXA" (Não de ponta a ponta) */
+    border-radius: 16px; /* Cantos arredondados */
+    margin-bottom: 40px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.5); /* Sombra pra destacar */
     position: relative;
-    z-index: 2; /* Fica por cima da camada escura */
-    max-width: 80%; /* Não deixa a imagem ficar gigante */
-    max-height: 80%;
-    border-radius: 8px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3); /* Sombra na própria imagem */
-    transition: transform 0.3s ease;
-}
-
-/* Efeito ao passar o mouse */
-.about-image-container:hover .about-real-image {
-    transform: scale(1.02); /* Um leve zoom para dar vida */
-}
-
-/* Ajuste para celular */
-@media (max-width: 768px) {
-    .about-image-container {
-        min-height: 300px;
-        margin-top: 30px;
-    }
-    .about-real-image {
-        max-width: 90%;
-    }
-}
-/* --- EFEITO DE IMAGEM DA PÁGINA SOBRE --- */
-.about-image-wrapper {
-    position: relative;
-    width: 100%;
-    height: 400px; /* Altura fixa pra ficar imponente */
-    border-radius: 12px;
     overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
 }
 
-/* O Fundo (tipo o da Home) */
-.about-bg-effect {
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    /* Pega a mesma imagem pra usar de fundo */
-    background-image: url('../img/fachada.jpg'); 
-    background-size: cover;
-    background-position: center;
-    filter: blur(10px) brightness(0.4); /* Desfoque e escurecimento */
-    transform: scale(1.1); /* Zoom pra não dar borda branca no blur */
-}
-
-/* A Foto da Frente */
-.about-real-photo {
-    position: relative;
-    z-index: 2;
-    max-width: 85%;
-    max-height: 85%;
-    border-radius: 8px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-    border: 1px solid rgba(255,255,255,0.1);
-    transition: transform 0.3s ease;
-}
-
-.about-image-wrapper:hover .about-real-photo {
-    transform: scale(1.02); /* Leve zoom ao passar o mouse */
+/* Ajuste importante para celular (no celular o 'fixed' as vezes trava, então a gente solta) */
+@media (max-width: 768px) {
+    .about-parallax-window {
+        background-attachment: scroll; /* No celular rola normal pra não bugar */
+        min-height: 300px;
+    }
 }
