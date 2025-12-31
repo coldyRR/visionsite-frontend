@@ -5,7 +5,16 @@
 // --- HELPER: Função inteligente para arrumar imagens ---
 function getImageUrl(imagePath, placeholderSize = '400x280') {
     if (!imagePath) return `https://via.placeholder.com/${placeholderSize}?text=Sem+Imagem`;
-    
+    if (imagePath.startsWith('http')) return imagePath;
+    return `https://visionsite-backend.onrender.com${imagePath}`;
+}
+    // --- HELPER: Formatar Preço (R$) ---  <-- COLOCA AQUI!
+function formatPrice(value) {
+    return new Intl.NumberFormat('pt-BR', {
+        style: 'currency',
+        currency: 'BRL'
+    }).format(value);
+}
     // Se já tem http (Vem do Cloudinary ou link externo), usa direto
     if (imagePath.startsWith('http')) {
         return imagePath;
