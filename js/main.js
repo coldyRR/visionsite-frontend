@@ -49,10 +49,9 @@ async function loadFeaturedProperties() {
     console.log('📡 Buscando imóveis recentes...');
     
     try {
-        // MUDANÇA: Pega TODOS os imóveis (já que não tem destaque marcado)
+        // Busca TODOS os imóveis
         const response = await propertiesAPI.getAll();
-        
-        // Pega os 6 primeiros para exibir na home
+        // Pega os 6 primeiros
         const properties = response.data.slice(0, 6);
         
         console.log('✅ Imóveis carregados:', properties.length);
@@ -97,10 +96,8 @@ async function loadFeaturedProperties() {
         console.error('❌ Erro ao carregar imóveis:', error);
         container.innerHTML = `
             <div style="grid-column: 1/-1; text-align: center; padding: 60px 20px;">
-                <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: #ff6b6b; margin-bottom: 20px;"></i>
-                <h3 style="color: #fff; margin-bottom: 10px;">Erro ao carregar imóveis</h3>
-                <p style="color: #888; margin-bottom: 20px;">Verifique sua conexão</p>
-                <button onclick="loadFeaturedProperties()" class="btn-primary">
+                <p style="color: #888;">Erro ao carregar imóveis. Verifique sua conexão.</p>
+                <button onclick="loadFeaturedProperties()" class="btn-primary" style="margin-top:10px;">
                     <i class="fas fa-sync"></i> Tentar Novamente
                 </button>
             </div>
@@ -133,7 +130,6 @@ async function loadSearchResults() {
         maxPrice: urlParams.get('maxPrice') || ''
     };
     
-    // Preenche os campos de filtro com o que veio da URL
     if (document.getElementById('filterType')) {
         document.getElementById('filterType').value = filters.type;
     }
@@ -222,7 +218,8 @@ async function loadPropertyDetail() {
     const propertyId = urlParams.get('id');
     
     if (!propertyId) {
-        window.location.href = 'imoveis.html';
+        // Se não tiver ID, volta pra lista
+        // window.location.href = 'imoveis.html'; 
         return;
     }
     
@@ -290,8 +287,6 @@ async function loadPropertyDetail() {
         
     } catch (error) {
         console.error('Erro ao carregar imóvel:', error);
-        // alert('Erro ao carregar imóvel!'); // Comentado para não incomodar
-        // window.location.href = 'imoveis.html';
     }
 }
 
@@ -342,6 +337,10 @@ async function submitInterest(event) {
     }
 }
 
+// Fecha o modal se clicar fora dele
 document.addEventListener('click', function(event) {
     const modal = document.getElementById('interestModal');
-    if (modal &&
+    if (modal && event.target === modal) {
+        closeInterestModal();
+    }
+});
