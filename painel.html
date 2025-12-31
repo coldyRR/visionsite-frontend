@@ -121,32 +121,51 @@
             
             <!-- Properties Section -->
             <div id="propertiesSection" class="content-section" style="display: none;">
-                <div class="page-header">
-                    <div>
-                        <h1 class="page-title">Meus Imóveis</h1>
-                        <p style="color: #888;">Gerencie seus imóveis cadastrados</p>
-                    </div>
-                    <button class="btn-primary-panel" onclick="openPropertyModal()">
-                        <i class="fas fa-plus"></i> Novo Imóvel
-                    </button>
-                </div>
-                
-                <div class="properties-table">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Imagem</th>
-                                <th>Título</th>
-                                <th>Localização</th>
-                                <th>Preço</th>
-                                <th>Disponível</th>
-                                <th>Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody id="propertiesTableBody"></tbody>
-                    </table>
-                </div>
+            <div class="section-header">
+                <h2>Gerenciar Imóveis</h2>
+                <button class="btn-primary" onclick="openPropertyModal()">
+                    <i class="fas fa-plus"></i> Novo Imóvel
+                </button>
             </div>
+
+            <div style="background: #1a1a1a; padding: 15px; border-radius: 8px; margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
+                <input type="text" id="adminSearchInput" placeholder="Buscar por nome, cidade..." 
+                       style="flex: 1; padding: 10px; background: #000; border: 1px solid #333; color: white; border-radius: 4px;"
+                       onkeyup="filterAdminProperties()">
+                
+                <select id="adminFilterType" onchange="filterAdminProperties()"
+                        style="padding: 10px; background: #000; border: 1px solid #333; color: white; border-radius: 4px;">
+                    <option value="">Todos os Tipos</option>
+                    <option value="apartamento">Apartamento</option>
+                    <option value="casa">Casa</option>
+                    <option value="terreno">Terreno</option>
+                </select>
+
+                <select id="adminFilterStatus" onchange="filterAdminProperties()"
+                        style="padding: 10px; background: #000; border: 1px solid #333; color: white; border-radius: 4px;">
+                    <option value="">Status (Todos)</option>
+                    <option value="active">Ativos</option>
+                    <option value="inactive">Inativos</option>
+                </select>
+            </div>
+
+            <div class="table-container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Foto</th>
+                            <th>Título</th>
+                            <th id="thOwner" style="display:none;">Cadastrado Por</th> <th>Local</th>
+                            <th>Preço</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="propertiesTableBody">
+                        </tbody>
+                </table>
+            </div>
+        </div>
             
             <!-- Leads Section (Admin only) -->
             <div id="leadsSection" class="content-section" style="display: none;">

@@ -159,18 +159,24 @@ async function loadPropertyDetail() {
 }
 
 async function loadFeaturedProperties() {
-    const container = document.getElementById('featuredProperties');
+   const container = document.getElementById('featuredProperties');
     if (!container) return;
+    
     try {
         const response = await propertiesAPI.getAll();
-        const properties = response.data.slice(0, 6);
+        // Pega 10 imóveis para ter o que rolar
+        const properties = response.data.slice(0, 10); 
         
         if (properties.length === 0) {
-            container.innerHTML = '<p style="text-align:center; padding:40px; color:#888;">Nenhum imóvel encontrado.</p>';
+            container.innerHTML = '<p style="text-align:center; width:100%; color:#888;">Nenhum destaque no momento.</p>';
             return;
         }
+
+        // Adiciona classe para ativar o CSS de carrossel
+        container.classList.add('carousel-mode');
         
-        container.innerHTML = properties.map(p => `
+        // Cria os cards
+        const cardsHTML = properties.map(p => `
             <div class="property-card" onclick="window.location.href='imovel.html?id=${p._id}'">
                 <div class="property-image" style="background-image: url('${getImageUrl(p.images[0])}')">
                     <span class="property-badge">Venda</span>
@@ -186,10 +192,35 @@ async function loadFeaturedProperties() {
                     <div class="property-price">${formatPrice(p.price)}</div>
                 </div>
             </div>`).join('');
+
+        // Envolve tudo no Wrapper com botões
+        const wrapper = document.createElement('div');
+        wrapper.className = 'carousel-wrapper';
+        wrapper.innerHTML = `
+            <button class="carousel-btn prev" onclick="scrollCarousel(-1)"><i class="fas fa-chevron-left"></i></button>
+            <div class="properties-grid carousel-mode" id="carouselTrack">${cardsHTML}</div>
+            <button class="carousel-btn next" onclick="scrollCarousel(1)"><i class="fas fa-chevron-right"></i></button>
+        `;
+        
+        // Limpa e adiciona o novo HTML
+        container.innerHTML = '';
+        container.parentNode.replaceChild(wrapper, container); // Substitui o container original pelo wrapper
+        
     } catch (error) {
-        container.innerHTML = '<p style="text-align:center;">Erro ao carregar.</p>';
+        console.error(error);
+        if(container) container.innerHTML = '<p style="text-align:center;">Erro ao carregar.</p>';
     }
 }
+
+// Função para os botões do carrossel funcionarem
+function scrollCarousel(direction) {
+    const track = document.getElementById('carouselTrack');
+    if (track) {
+        const scrollAmount = 320; // Tamanho do card + gap
+        track.scrollBy({ left: scrollAmount * direction, behavior: 'smooth' });
+    }
+}
+
 
 // Busca e Filtros
 function performSearch() {

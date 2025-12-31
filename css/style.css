@@ -320,3 +320,54 @@ ul{list-style:none}
     cursor: pointer;
 }
 .close-modal-btn:hover { color: #fff; }
+/* --- CARROSSEL DE IMÓVEIS --- */
+.carousel-wrapper {
+    position: relative;
+    width: 100%;
+    padding: 0 20px;
+}
+
+.properties-grid.carousel-mode {
+    display: flex;
+    overflow-x: auto;
+    gap: 25px;
+    padding-bottom: 20px;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Esconder barra de rolagem feia, mas manter funcionalidade */
+.properties-grid.carousel-mode::-webkit-scrollbar { height: 8px; }
+.properties-grid.carousel-mode::-webkit-scrollbar-track { background: #111; }
+.properties-grid.carousel-mode::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+
+.properties-grid.carousel-mode .property-card {
+    min-width: 300px; /* Garante que o card não esmague */
+    max-width: 300px;
+    scroll-snap-align: start;
+}
+
+.carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0,0,0,0.8);
+    color: white;
+    border: 1px solid #333;
+    width: 45px; height: 45px;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.3s;
+}
+.carousel-btn:hover { background: #fff; color: #000; }
+.carousel-btn.prev { left: -10px; }
+.carousel-btn.next { right: -10px; }
+
+/* Mobile ajust */
+@media (max-width: 768px) {
+    .carousel-btn { display: none; } /* No celular usa o dedo */
+    .properties-grid.carousel-mode .property-card { min-width: 260px; }
+}

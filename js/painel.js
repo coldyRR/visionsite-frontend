@@ -1,10 +1,15 @@
 // ============================================
-// PAINEL - VERSÃO FINAL COMPLETA (Leads + Brokers OK)
+// PAINEL - VERSÃO FINAL (COM BUSCA, FILTROS E PERMISSÕES)
 // ============================================
 
 const API_BASE_URL = "https://visionsite-backend.onrender.com";
 let editingPropertyId = null;
 let propertyImages = [];
+
+// Variáveis Globais para Controle de Lista e Permissões
+let globalPropertiesList = [];
+let currentUserRole = '';
+let currentUserId = '';
 
 // --- HELPER: Imagens ---
 function getImageUrl(imagePath) {
@@ -27,6 +32,11 @@ async function loadPainelDashboard() {
     try {
         const response = await authAPI.me();
         const user = response.user;
+        
+        // Salva dados do usuário logado para usar nos filtros
+        currentUserRole = user.role;
+        currentUserId = user._id;
+
         document.getElementById('userInfo').textContent = user.name;
 
         if (user.role === 'admin') {
@@ -38,6 +48,7 @@ async function loadPainelDashboard() {
         await updateDashboardStats();
         showPainelSection('dashboard');
     } catch (error) {
+        console.error(error);
         authAPI.logout();
     }
 }
@@ -75,28 +86,108 @@ function showPainelSection(section) {
         
         if(section === 'properties') loadPropertiesTable();
         if(section === 'leads') loadLeads();
-        if(section === 'brokers') loadBrokers(); // AGORA VAI FUNCIONAR!
+        if(section === 'brokers') loadBrokers();
         if(section === 'dashboard') updateDashboardStats();
     }
 }
 
-// --- IMÓVEIS ---
+// ============================================
+// LÓGICA DE IMÓVEIS (ATUALIZADA)
+// ============================================
+
+// 1. Carrega dados e aplica permissões iniciais
 async function loadPropertiesTable() {
     const tbody = document.getElementById('propertiesTableBody');
+    const thOwner = document.getElementById('thOwner'); // Coluna "Cadastrado Por"
+    
     try {
         const response = await propertiesAPI.getAll();
-        const properties = response.data;
+        const allProperties = response.data;
 
-        if (properties.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:20px;">Nenhum imóvel.</td></tr>';
-            return;
+        // FILTRAGEM POR PERMISSÃO
+        if (currentUserRole !== 'admin') {
+            // Se for Corretor: Só vê os próprios imóveis
+            // Verifica se o ID do dono bate com o ID do usuário logado
+            globalPropertiesList = allProperties.filter(p => {
+                const ownerId = p.owner?._id || p.owner; // Garante que pega o ID mesmo se for objeto
+                return ownerId === currentUserId;
+            });
+            
+            // Esconde coluna de dono (desnecessária pra ele)
+            if(thOwner) thOwner.style.display = 'none'; 
+        } else {
+            // Se for Admin: Vê tudo
+            globalPropertiesList = allProperties;
+            
+            // Mostra coluna de dono
+            if(thOwner) thOwner.style.display = 'table-cell';
         }
 
-        tbody.innerHTML = properties.map(p => `
-            <tr>
+        // Renderiza a tabela filtrada
+        filterAdminProperties(); // Chama o filtro pra desenhar (já pega o estado atual dos inputs)
+
+    } catch (error) {
+        console.error(error);
+        tbody.innerHTML = '<tr><td colspan="7">Erro ao carregar lista.</td></tr>';
+    }
+}
+
+// 2. Filtra a lista com base na Barra de Busca (Nome, Tipo, Status)
+function filterAdminProperties() {
+    const term = document.getElementById('adminSearchInput')?.value.toLowerCase() || '';
+    const type = document.getElementById('adminFilterType')?.value || '';
+    const status = document.getElementById('adminFilterStatus')?.value || '';
+
+    const filtered = globalPropertiesList.filter(p => {
+        // Busca por Texto (Título ou Cidade)
+        const matchesText = p.title.toLowerCase().includes(term) || 
+                          p.location.toLowerCase().includes(term);
+        
+        // Busca por Tipo
+        const matchesType = type === '' || p.type === type;
+
+        // Busca por Status (Ativo/Inativo)
+        let matchesStatus = true;
+        if (status === 'active') matchesStatus = p.active === true;
+        if (status === 'inactive') matchesStatus = p.active === false;
+
+        return matchesText && matchesType && matchesStatus;
+    });
+
+    renderPropertiesTable(filtered);
+}
+
+// 3. Desenha a tabela na tela
+function renderPropertiesTable(properties) {
+    const tbody = document.getElementById('propertiesTableBody');
+    
+    if (properties.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:20px;">Nenhum imóvel encontrado.</td></tr>';
+        return;
+    }
+
+    tbody.innerHTML = properties.map(p => {
+        // Lógica do Dono (Quem cadastrou)
+        // Tenta pegar o nome de várias formas (objeto populado ou só ID)
+        let ownerName = '---';
+        if (p.owner && p.owner.name) ownerName = p.owner.name;
+        else if (p.ownerName) ownerName = p.ownerName;
+        
+        const ownerCell = currentUserRole === 'admin' ? 
+            `<td><small style="color:#888;">${ownerName}</small></td>` : '';
+
+        // Estilo para inativos (meio transparente)
+        const rowStyle = !p.active ? 'opacity: 0.6; background: #221a1a;' : '';
+        const statusLabel = !p.active ? '<br><span style="color:#ff6b6b;font-size:0.7rem;">(INATIVO)</span>' : '';
+
+        return `
+            <tr style="${rowStyle}">
                 <td><img src="${getImageUrl(p.images[0])}" style="width:60px;height:60px;object-fit:cover;border-radius:4px;"></td>
-                <td><strong>${p.title}</strong></td>
-                <td>${p.location}</td>
+                <td>
+                    <strong>${p.title}</strong>
+                    ${statusLabel}
+                </td>
+                ${ownerCell} <td>${p.location}</td>
                 <td><strong>${formatPrice(p.price)}</strong></td>
                 <td>
                     <label class="switch">
@@ -109,20 +200,30 @@ async function loadPropertiesTable() {
                     <button class="btn-icon delete" onclick="confirmDeleteProperty('${p._id}')"><i class="fas fa-trash"></i></button>
                 </td>
             </tr>
-        `).join('');
-    } catch (error) {
-        tbody.innerHTML = '<tr><td colspan="6">Erro ao carregar.</td></tr>';
-    }
+        `;
+    }).join('');
 }
 
 async function togglePropertyActive(id, active) {
-    const formData = new FormData();
-    formData.append('active', active);
-    await propertiesAPI.update(id, formData);
-    updateDashboardStats();
+    try {
+        const formData = new FormData();
+        formData.append('active', active);
+        await propertiesAPI.update(id, formData);
+        
+        // Atualiza a lista localmente sem recarregar tudo do servidor
+        const prop = globalPropertiesList.find(p => p._id === id);
+        if(prop) prop.active = active;
+        
+        filterAdminProperties(); // Redesenha a tabela
+        updateDashboardStats();
+    } catch(err) {
+        alert('Erro ao alterar status');
+    }
 }
 
-// --- LEADS (CLIENTES) ---
+// ============================================
+// LEADS (CLIENTES)
+// ============================================
 async function loadLeads() {
     const container = document.getElementById('leadsContainer');
     try {
@@ -165,7 +266,9 @@ async function loadLeads() {
     }
 }
 
-// --- BROKERS (USUÁRIOS) - ADICIONADO DE VOLTA ---
+// ============================================
+// BROKERS (USUÁRIOS)
+// ============================================
 async function loadBrokers() {
     const container = document.getElementById('brokersContainer');
     try {
@@ -251,8 +354,9 @@ async function confirmDeleteBroker(id) {
 function closeBrokerModal() { document.getElementById('brokerModal').classList.remove('active'); }
 function editBroker(id) { openBrokerModal(id); }
 
-
-// --- MODAL DE IMÓVEIS (EDITAR/CRIAR) ---
+// ============================================
+// MODAL DE IMÓVEIS (EDITAR/CRIAR)
+// ============================================
 function openPropertyModal(id=null) {
     const modal = document.getElementById('propertyModal');
     const form = document.getElementById('propertyForm');
