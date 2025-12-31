@@ -1,115 +1,104 @@
 // ============================================
-// API CLIENT - Comunicação com Backend
+// API CLIENT - PRODUÇÃO
 // ============================================
 
-const API_URL = "https://visionsite-backend.onrender.com/api";
+// 🔗 URL DO BACKEND NO RENDER
+const API_URL = 'https://visionsite-backend.onrender.com/api';
 
-// Obter token do localStorage
-const getToken = () => {
-    return localStorage.getItem('vision_token');
-};
+// ============================================
+// TOKEN MANAGEMENT
+// ============================================
 
-// Setar token no localStorage
-const setToken = (token) => {
-    localStorage.setItem('vision_token', token);
-};
-
-// Remover token do localStorage
+const getToken = () => localStorage.getItem('vision_token');
+const setToken = (token) => localStorage.setItem('vision_token', token);
 const removeToken = () => {
     localStorage.removeItem('vision_token');
     localStorage.removeItem('vision_user');
 };
 
-// Headers padrão para requisições
-const getHeaders = (includeAuth = true) => {
-    const headers = {
-        'Content-Type': 'application/json'
-    };
+// ============================================
+// API REQUEST HELPER
+// ============================================
 
-    if (includeAuth) {
-        const token = getToken();
-        if (token) {
-            headers['Authorization'] = `Bearer ${token}`;
-        }
+async function apiRequest(endpoint, options = {}) {
+    const token = getToken();
+    
+    const defaultHeaders = {};
+    
+    if (token) {
+        defaultHeaders['Authorization'] = `Bearer ${token}`;
     }
-
-    return headers;
-};
-
-// Função auxiliar para fazer requisições
-const apiRequest = async (endpoint, options = {}) => {
+    
+    if (!(options.body instanceof FormData)) {
+        defaultHeaders['Content-Type'] = 'application/json';
+    }
+    
+    const config = {
+        ...options,
+        headers: {
+            ...defaultHeaders,
+            ...options.headers
+        }
+    };
+    
     try {
-        const response = await fetch(`${API_URL}${endpoint}`, {
-            ...options,
-            headers: {
-                ...getHeaders(options.auth !== false),
-                ...options.headers
-            }
-        });
-
+        const response = await fetch(`${API_URL}${endpoint}`, config);
+        
+        if (response.status === 401) {
+            removeToken();
+            window.location.href = '/login.html';
+            throw new Error('Sessão expirada');
+        }
+        
         const data = await response.json();
-
+        
         if (!response.ok) {
-            // Se token inválido, fazer logout
-            if (response.status === 401) {
-                removeToken();
-                if (window.location.pathname !== '/login.html' && window.location.pathname !== '/index.html') {
-                    window.location.href = 'login.html';
-                }
-            }
             throw new Error(data.message || 'Erro na requisição');
         }
-
+        
         return data;
+        
     } catch (error) {
-        console.error('Erro na API:', error);
+        console.error('API Error:', error);
         throw error;
     }
-};
+}
 
 // ============================================
 // AUTH API
 // ============================================
 
 const authAPI = {
-    // Login
-    login: async (username, password) => {
+    async login(username, password) {
         const data = await apiRequest('/auth/login', {
             method: 'POST',
-            auth: false,
             body: JSON.stringify({ username, password })
         });
-
-        if (data.success && data.token) {
+        
+        if (data.token) {
             setToken(data.token);
             localStorage.setItem('vision_user', JSON.stringify(data.user));
         }
-
+        
         return data;
     },
-
-    // Obter usuário atual
-    me: async () => {
-        return await apiRequest('/auth/me', {
-            method: 'GET'
-        });
+    
+    async me() {
+        return await apiRequest('/auth/me');
     },
-
-    // Logout
-    logout: () => {
+    
+    logout() {
         removeToken();
-        window.location.href = 'index.html';
+        window.location.href = '/login.html';
     },
-
-    // Verificar se está autenticado
-    isAuthenticated: () => {
+    
+    isAuthenticated() {
         return !!getToken();
     },
-
-    // Obter usuário do localStorage
-    getCurrentUser: () => {
-        const user = localStorage.getItem('vision_user');
-        return user ? JSON.parse(user) : null;
+    
+    getCurrentUser() {
+        const userStr = localStorage.getItem('vision_user');
+        return userStr ? JSON.parse(userStr) : null;
     }
 };
 
@@ -118,71 +107,37 @@ const authAPI = {
 // ============================================
 
 const propertiesAPI = {
-    // Listar todos os imóveis
-    getAll: async (filters = {}) => {
-        const params = new URLSearchParams(filters);
-        return await apiRequest(`/properties?${params}`, {
-            method: 'GET',
-            auth: false
+    async getAll(filters = {}) {
+        const params = new URLSearchParams();
+        Object.entries(filters).forEach(([key, value]) => {
+            if (value) params.append(key, value);
         });
+        return await apiRequest(`/properties?${params.toString()}`);
     },
-
-    // Obter imóveis em destaque
-    getFeatured: async () => {
-        return await apiRequest('/properties/featured', {
-            method: 'GET',
-            auth: false
-        });
+    
+    async getFeatured() {
+        return await apiRequest('/properties/featured');
     },
-
-    // Obter imóvel por ID
-    getById: async (id) => {
-        return await apiRequest(`/properties/${id}`, {
-            method: 'GET',
-            auth: false
-        });
+    
+    async getById(id) {
+        return await apiRequest(`/properties/${id}`);
     },
-
-    // Criar novo imóvel (com imagens)
-    create: async (formData) => {
-        const token = getToken();
-        const response = await fetch(`${API_URL}/properties`, {
+    
+    async create(formData) {
+        return await apiRequest('/properties', {
             method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${token}`
-            },
-            body: formData // FormData já tem o Content-Type correto
-        });
-
-        const data = await response.json();
-        if (!response.ok) {
-            throw new Error(data.message || 'Erro ao criar imóvel');
-        }
-
-        return data;
-    },
-
-    // Atualizar imóvel
-    update: async (id, formData) => {
-        const token = getToken();
-        const response = await fetch(`${API_URL}/properties/${id}`, {
-            method: 'PUT',
-            headers: {
-                'Authorization': `Bearer ${token}`
-            },
             body: formData
         });
-
-        const data = await response.json();
-        if (!response.ok) {
-            throw new Error(data.message || 'Erro ao atualizar imóvel');
-        }
-
-        return data;
     },
-
-    // Deletar imóvel
-    delete: async (id) => {
+    
+    async update(id, formData) {
+        return await apiRequest(`/properties/${id}`, {
+            method: 'PUT',
+            body: formData
+        });
+    },
+    
+    async delete(id) {
         return await apiRequest(`/properties/${id}`, {
             method: 'DELETE'
         });
@@ -190,49 +145,37 @@ const propertiesAPI = {
 };
 
 // ============================================
-// USERS API (Admin only)
+// USERS API
 // ============================================
 
 const usersAPI = {
-    // Listar todos os usuários
-    getAll: async () => {
-        return await apiRequest('/users', {
-            method: 'GET'
-        });
+    async getAll() {
+        return await apiRequest('/users');
     },
-
-    // Listar apenas corretores
-    getBrokers: async () => {
-        return await apiRequest('/users/brokers', {
-            method: 'GET'
-        });
+    
+    async getBrokers() {
+        return await apiRequest('/users/brokers');
     },
-
-    // Obter usuário por ID
-    getById: async (id) => {
-        return await apiRequest(`/users/${id}`, {
-            method: 'GET'
-        });
+    
+    async getById(id) {
+        return await apiRequest(`/users/${id}`);
     },
-
-    // Criar novo corretor
-    create: async (userData) => {
+    
+    async create(userData) {
         return await apiRequest('/users', {
             method: 'POST',
             body: JSON.stringify(userData)
         });
     },
-
-    // Atualizar usuário
-    update: async (id, userData) => {
+    
+    async update(id, userData) {
         return await apiRequest(`/users/${id}`, {
             method: 'PUT',
             body: JSON.stringify(userData)
         });
     },
-
-    // Deletar usuário
-    delete: async (id) => {
+    
+    async delete(id) {
         return await apiRequest(`/users/${id}`, {
             method: 'DELETE'
         });
@@ -244,64 +187,45 @@ const usersAPI = {
 // ============================================
 
 const appointmentsAPI = {
-    // Criar cadastro de interesse (público)
-    create: async (appointmentData) => {
+    async create(appointmentData) {
         return await apiRequest('/appointments', {
             method: 'POST',
-            auth: false,
             body: JSON.stringify(appointmentData)
         });
     },
-
-    // Listar todos os cadastros (admin)
-    getAll: async (filters = {}) => {
-        const params = new URLSearchParams(filters);
-        return await apiRequest(`/appointments?${params}`, {
-            method: 'GET'
+    
+    async getAll(filters = {}) {
+        const params = new URLSearchParams();
+        Object.entries(filters).forEach(([key, value]) => {
+            if (value) params.append(key, value);
         });
+        return await apiRequest(`/appointments?${params.toString()}`);
     },
-
-    // Obter cadastro por ID (admin)
-    getById: async (id) => {
-        return await apiRequest(`/appointments/${id}`, {
-            method: 'GET'
-        });
+    
+    async getById(id) {
+        return await apiRequest(`/appointments/${id}`);
     },
-
-    // Atualizar status (admin)
-    updateStatus: async (id, status) => {
+    
+    async updateStatus(id, status) {
         return await apiRequest(`/appointments/${id}`, {
             method: 'PUT',
             body: JSON.stringify({ status })
         });
     },
-
-    // Deletar cadastro (admin)
-    delete: async (id) => {
+    
+    async delete(id) {
         return await apiRequest(`/appointments/${id}`, {
             method: 'DELETE'
         });
     }
 };
 
-// ============================================
-// UTILS
-// ============================================
+// Helper function para URLs de imagens
+function getImageUrl(path) {
+    if (!path) return 'https://via.placeholder.com/400x280?text=Sem+Imagem';
+    if (path.startsWith('http')) return path;
+    return `${API_URL.replace('/api', '')}${path}`;
+}
 
-const formatPrice = (price) => {
-    return new Intl.NumberFormat('pt-BR', {
-        style: 'currency',
-        currency: 'BRL'
-    }).format(price);
-};
-
-const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('pt-BR', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-    });
-};
+console.log('✅ API Client carregado');
+console.log('🔗 API URL:', API_URL);
