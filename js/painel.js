@@ -55,7 +55,7 @@ async function loadPainelDashboard() {
 
 async function updateDashboardStats() {
     try {
-        const props = await propertiesAPI.getAll();
+        const props = await propertiesAPI.getAll({ active: 'all' });
         document.getElementById('totalProperties').textContent = props.data.length;
         document.getElementById('propertiesActive').textContent = props.data.filter(p => p.active).length;
         
