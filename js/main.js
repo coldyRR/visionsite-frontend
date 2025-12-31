@@ -1,27 +1,29 @@
 // ============================================
-// VISION IMÓVEIS - MAIN.JS (Versão Cloudinary)
+// VISION IMÓVEIS - MAIN.JS (Versão Final Blindada)
 // ============================================
+
+const API_BASE_URL = "https://visionsite-backend.onrender.com";
 
 // --- HELPER: Função inteligente para arrumar imagens ---
 function getImageUrl(imagePath, placeholderSize = '400x280') {
     if (!imagePath) return `https://via.placeholder.com/${placeholderSize}?text=Sem+Imagem`;
-    if (imagePath.startsWith('http')) return imagePath;
-    return `https://visionsite-backend.onrender.com${imagePath}`;
-}
-    // --- HELPER: Formatar Preço (R$) ---  <-- COLOCA AQUI!
-function formatPrice(value) {
-    return new Intl.NumberFormat('pt-BR', {
-        style: 'currency',
-        currency: 'BRL'
-    }).format(value);
-}
+    
     // Se já tem http (Vem do Cloudinary ou link externo), usa direto
     if (imagePath.startsWith('http')) {
         return imagePath;
     }
     
     // Se não tem http (Imagem antiga local), coloca o servidor na frente
-    return `https://visionsite-backend.onrender.com${imagePath}`;
+    return `${API_BASE_URL}${imagePath}`;
+}
+
+// --- HELPER: Formatar Preço (R$) ---
+function formatPrice(value) {
+    if (value === undefined || value === null) return 'R$ 0,00';
+    return new Intl.NumberFormat('pt-BR', {
+        style: 'currency',
+        currency: 'BRL'
+    }).format(value);
 }
 
 // Menu Mobile
@@ -44,21 +46,23 @@ async function loadFeaturedProperties() {
     const container = document.getElementById('featuredProperties');
     if (!container) return;
     
-    console.log('📡 Buscando imóveis em destaque...');
+    console.log('📡 Buscando imóveis recentes...');
     
     try {
+        // MUDANÇA: Pega TODOS os imóveis (já que não tem destaque marcado)
         const response = await propertiesAPI.getAll();
-        const properties = response.data;
+        
+        // Pega os 6 primeiros para exibir na home
+        const properties = response.data.slice(0, 6);
         
         console.log('✅ Imóveis carregados:', properties.length);
         
         if (properties.length === 0) {
-            container.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #888; padding: 60px 20px;">Nenhum imóvel em destaque no momento.</p>';
+            container.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #888; padding: 60px 20px;">Nenhum imóvel cadastrado no momento.</p>';
             return;
         }
         
         container.innerHTML = properties.map(property => {
-            // Usa a função inteligente aqui
             const mainImage = getImageUrl(property.images && property.images[0]);
             
             return `
@@ -95,7 +99,7 @@ async function loadFeaturedProperties() {
             <div style="grid-column: 1/-1; text-align: center; padding: 60px 20px;">
                 <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: #ff6b6b; margin-bottom: 20px;"></i>
                 <h3 style="color: #fff; margin-bottom: 10px;">Erro ao carregar imóveis</h3>
-                <p style="color: #888; margin-bottom: 20px;">Verifique se o backend está rodando</p>
+                <p style="color: #888; margin-bottom: 20px;">Verifique sua conexão</p>
                 <button onclick="loadFeaturedProperties()" class="btn-primary">
                     <i class="fas fa-sync"></i> Tentar Novamente
                 </button>
@@ -129,6 +133,7 @@ async function loadSearchResults() {
         maxPrice: urlParams.get('maxPrice') || ''
     };
     
+    // Preenche os campos de filtro com o que veio da URL
     if (document.getElementById('filterType')) {
         document.getElementById('filterType').value = filters.type;
     }
@@ -177,7 +182,6 @@ function displaySearchResults(properties) {
     if (noResults) noResults.style.display = 'none';
     
     container.innerHTML = properties.map(property => {
-        // Usa a função inteligente aqui também
         const mainImage = getImageUrl(property.images && property.images[0]);
         
         return `
@@ -231,7 +235,6 @@ async function loadPropertyDetail() {
         // Gallery
         const gallery = document.getElementById('propertyGallery');
         if (gallery) {
-            // E usa a função inteligente aqui também (tamanho maior pro placeholder)
             const mainImage = getImageUrl(property.images && property.images[0], '1200x500');
             gallery.style.backgroundImage = `url('${mainImage}')`;
             
@@ -287,8 +290,8 @@ async function loadPropertyDetail() {
         
     } catch (error) {
         console.error('Erro ao carregar imóvel:', error);
-        alert('Erro ao carregar imóvel!');
-        window.location.href = 'imoveis.html';
+        // alert('Erro ao carregar imóvel!'); // Comentado para não incomodar
+        // window.location.href = 'imoveis.html';
     }
 }
 
@@ -341,7 +344,4 @@ async function submitInterest(event) {
 
 document.addEventListener('click', function(event) {
     const modal = document.getElementById('interestModal');
-    if (modal && event.target === modal) {
-        closeInterestModal();
-    }
-});
+    if (modal &&
