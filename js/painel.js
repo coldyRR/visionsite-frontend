@@ -1,5 +1,5 @@
 // ============================================
-// PAINEL - VERSÃO CLOUDINARY FINAL
+// PAINEL - VERSÃO FINAL CORRIGIDA
 // ============================================
 
 const API_BASE_URL = "https://visionsite-backend.onrender.com";
@@ -17,6 +17,14 @@ function getImageUrl(imagePath) {
     
     // Se não tem http (Imagem antiga local), coloca o servidor na frente
     return `${API_BASE_URL}${imagePath}`;
+}
+
+// --- HELPER: Formatar Preço (R$) --- ADICIONADO AGORA
+function formatPrice(value) {
+    return new Intl.NumberFormat('pt-BR', {
+        style: 'currency',
+        currency: 'BRL'
+    }).format(value);
 }
 
 // Load Dashboard
