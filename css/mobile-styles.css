@@ -121,3 +121,41 @@
         z-index: -1;
     }
 }
+/* =======================================================
+   CSS DE EMERGÊNCIA - FORÇAR MENU APARECER
+   ======================================================= */
+
+@media (max-width: 768px) {
+    
+    /* Regra Dupla: Pega tanto se o JS usar 'active' quanto 'mobile-active' */
+    .sidebar.active, 
+    .sidebar.mobile-active {
+        left: 0 !important; /* Traz pra dentro da tela */
+        background-color: #111 !important; /* FUNDO PRETO SÓLIDO (O segredo!) */
+        width: 260px !important; /* Largura fixa */
+        height: 100vh !important; /* Altura total */
+        position: fixed !important;
+        top: 0 !important;
+        z-index: 99999 !important; /* Fica em cima de tudo */
+        display: block !important;
+        box-shadow: 5px 0 50px rgba(0,0,0,0.8) !important; /* Sombra forte */
+        border-right: 1px solid #333 !important;
+    }
+
+    /* Força os itens de dentro (logo, links) a aparecerem */
+    .sidebar.active *, 
+    .sidebar.mobile-active * {
+        visibility: visible !important;
+        opacity: 1 !important;
+        display: flex !important; /* Ou block, dependendo do elemento, mas flex ajuda alinhar */
+    }
+    
+    /* Ajuste específico para os links não ficarem bagunçados com o display flex acima */
+    .sidebar.active .menu-item, 
+    .sidebar.mobile-active .menu-item {
+        width: 100% !important;
+        padding: 15px 20px !important;
+        border-bottom: 1px solid #222;
+        color: #fff !important;
+    }
+}
