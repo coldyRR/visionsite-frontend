@@ -212,10 +212,65 @@
     <script src="js/api.js"></script>
     <script src="js/painel.js"></script>
     <script src="js/mobile-menu.js"></script>
-  </body>
-    <button class="mobile-menu-toggle" onclick="toggleSidebar()">
+    <style>
+    /* CSS FORÇADO PARA O MENU APARECER */
+    @media (max-width: 768px) {
+        .sidebar {
+            display: block !important;
+            position: fixed !important;
+            top: 0 !important;
+            left: -300px !important; /* Escondido na esquerda */
+            width: 260px !important;
+            height: 100vh !important;
+            background-color: #0d0d0d !important; /* Fundo Preto Quase Total */
+            z-index: 10000 !important; /* Fica em cima de tudo */
+            transition: left 0.3s ease-in-out !important;
+            box-shadow: 5px 0 15px rgba(0,0,0,0.8) !important;
+            padding-top: 60px !important; /* Espaço pro topo */
+        }
+
+        /* Classe que faz o menu entrar na tela */
+        .sidebar.active {
+            left: 0 !important;
+        }
+
+        /* Garante que os textos do menu apareçam */
+        .sidebar .menu-item {
+            display: flex !important;
+            color: #fff !important;
+            padding: 15px 20px !important;
+            border-bottom: 1px solid #333 !important;
+            font-size: 16px !important;
+        }
+        
+        /* Ajusta o ícone do botão */
+        .mobile-menu-toggle {
+            display: flex !important;
+            align-items: center;
+            justify-content: center;
+        }
+    }
+</style>
+
+<script>
+    // JS FORÇADO PARA O MENU ABRIR
+    function toggleSidebar() {
+        // Busca o menu pelo nome da classe
+        const sidebar = document.querySelector('.sidebar');
+        
+        if (sidebar) {
+            // Liga/Desliga a classe 'active'
+            sidebar.classList.toggle('active');
+            console.log('🔘 Menu acionado! Classe atual:', sidebar.className);
+        } else {
+            // Se não achar, avisa com um alerta na tela
+            alert('ERRO: Não achei a div .sidebar no seu HTML!');
+        }
+    }
+</script>
+        <button class="mobile-menu-toggle" onclick="toggleSidebar()">
         <i class="fas fa-bars"></i>
     </button>
-
     <div id="brokerModal" class="modal">
+  </body>
 </html>
