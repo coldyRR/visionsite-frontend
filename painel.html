@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel do Corretor - VISION</title>
     <link rel="icon" type="image/png" href="img/favicon.png">
-    
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
+
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/mobile-styles.css">
 
@@ -16,337 +16,105 @@
         /* Toggle Switch */
         .switch { position: relative; display: inline-block; width: 50px; height: 24px; }
         .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 24px; }
-        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+        .slider { position: absolute; cursor: pointer; inset: 0; background-color: #ccc; transition: .4s; border-radius: 24px; }
+        .slider:before { content: ""; position: absolute; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: #fff; transition: .4s; border-radius: 50%; }
         input:checked + .slider { background-color: #4CAF50; }
         input:checked + .slider:before { transform: translateX(26px); }
 
-        /* CSS FORÇADO PARA O MENU APARECER NO MOBILE */
         @media (max-width: 768px) {
             .sidebar {
                 display: block !important;
                 position: fixed !important;
                 top: 0 !important;
-                left: -300px !important; /* Escondido na esquerda */
+                left: -300px !important;
                 width: 260px !important;
                 height: 100vh !important;
-                background-color: #0d0d0d !important; /* Fundo Preto */
-                z-index: 10000 !important; /* Fica em cima de tudo */
+                background-color: #0d0d0d !important;
+                z-index: 10000 !important;
                 transition: left 0.3s ease-in-out !important;
                 box-shadow: 5px 0 15px rgba(0,0,0,0.8) !important;
                 padding-top: 60px !important;
             }
 
-            /* Classe que faz o menu entrar na tela */
             .sidebar.active {
                 left: 0 !important;
             }
 
-            .sidebar .menu-item {
-                display: flex !important;
-                color: #fff !important;
-                padding: 15px 20px !important;
-                border-bottom: 1px solid #333 !important;
-                font-size: 16px !important;
-            }
-            
             .mobile-menu-toggle {
                 display: flex !important;
-                align-items: center;
-                justify-content: center;
-                z-index: 10001; /* Botão acima do menu se precisar */
+                z-index: 10001;
             }
         }
     </style>
 </head>
+
 <body>
 
-    <button class="mobile-menu-toggle" onclick="toggleSidebar()">
-        <i class="fas fa-bars"></i>
-    </button>
+<button class="mobile-menu-toggle">
+    <i class="fas fa-bars"></i>
+</button>
 
-    <div class="painel-container">
-        <div class="sidebar">
-            <div class="sidebar-header">
-                <div class="sidebar-logo">
-                    <span class="sidebar-logo-icon">V</span>
-                    <div>
-                        <div class="sidebar-title">VISION</div>
-                        <div class="user-info" id="userInfo">Corretor</div>
-                    </div>
-                </div>
-            </div>
-            
-            <nav class="sidebar-menu">
-                <div class="menu-item active" onclick="showPainelSection('dashboard')">
-                    <i class="fas fa-home"></i> <span>Dashboard</span>
-                </div>
-                <div class="menu-item" onclick="showPainelSection('properties')">
-                    <i class="fas fa-building"></i> <span>Meus Imóveis</span>
-                </div>
-                <div class="menu-item" id="leadsMenuItem" style="display: none;" onclick="showPainelSection('leads')">
-                    <i class="fas fa-users"></i> <span>Cadastros de Clientes</span>
-                </div>
-                <div class="menu-item" id="brokersMenuItem" style="display: none;" onclick="showPainelSection('brokers')">
-                    <i class="fas fa-user-tie"></i> <span>Gerenciar Usuários</span>
-                </div>
-                <div class="menu-item" onclick="authAPI.logout()">
-                    <i class="fas fa-sign-out-alt"></i> <span>Sair</span>
-                </div>
-            </nav>
-        </div>
-        
-        <div class="main-content">
-            <div id="dashboardSection" class="content-section">
-                <div class="page-header">
-                    <div>
-                        <h1 class="page-title">Dashboard</h1>
-                        <p style="color: #888;">Bem-vindo ao painel</p>
-                    </div>
-                    <button class="btn-logout" onclick="authAPI.logout()"><i class="fas fa-sign-out-alt"></i> Sair</button>
-                </div>
-                
-                <div class="stats-cards">
-                    <div class="stat-card">
-                        <div class="stat-card-icon"><i class="fas fa-building"></i></div>
-                        <div class="stat-card-value" id="totalProperties">0</div>
-                        <div class="stat-card-label">Imóveis Cadastrados</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-card-icon"><i class="fas fa-check-circle"></i></div>
-                        <div class="stat-card-value" id="propertiesActive">0</div>
-                        <div class="stat-card-label">Imóveis Disponíveis</div>
-                    </div>
-                    <div class="stat-card" id="leadsCard" style="display: none;">
-                        <div class="stat-card-icon"><i class="fas fa-users"></i></div>
-                        <div class="stat-card-value" id="totalLeads">0</div>
-                        <div class="stat-card-label">Clientes Interessados</div>
-                    </div>
-                </div>
-            </div>
-            
-            <div id="propertiesSection" class="content-section" style="display: none;">
-                <div class="section-header">
-                    <h2>Gerenciar Imóveis</h2>
-                    <button class="btn-primary" onclick="openPropertyModal()"><i class="fas fa-plus"></i> Novo Imóvel</button>
-                </div>
-
-                <div style="background: #1a1a1a; padding: 15px; border-radius: 8px; margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
-                    <input type="text" id="adminSearchInput" placeholder="Buscar por nome, cidade..." 
-                           style="flex: 1; padding: 10px; background: #000; border: 1px solid #333; color: white; border-radius: 4px;"
-                           onkeyup="filterAdminProperties()">
-                    
-                    <select id="adminFilterType" onchange="filterAdminProperties()" style="padding: 10px; background: #000; border: 1px solid #333; color: white; border-radius: 4px;">
-                        <option value="">Todos os Tipos</option>
-                        <option value="apartamento">Apartamento</option>
-                        <option value="casa">Casa</option>
-                        <option value="terreno">Terreno</option>
-                    </select>
-
-                    <select id="adminFilterStatus" onchange="filterAdminProperties()" style="padding: 10px; background: #000; border: 1px solid #333; color: white; border-radius: 4px;">
-                        <option value="">Status (Todos)</option>
-                        <option value="active">Ativos</option>
-                        <option value="inactive">Inativos</option>
-                    </select>
-                </div>
-
-                <div class="table-container">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Imagem</th>
-                                <th>Título</th>
-                                <th id="thOwner" style="display:none;">Cadastrado Por</th> <th>Localização</th>
-                                <th>Preço</th>
-                                <th>Disponível</th>
-                                <th>Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody id="propertiesTableBody">
-                            </tbody>
-                    </table>
-                </div>
-            </div>
-            
-            <div id="leadsSection" class="content-section" style="display: none;">
-                <div class="page-header">
-                    <div>
-                        <h1 class="page-title">Cadastros de Clientes</h1>
-                        <p style="color: #888;">Todos os clientes que demonstraram interesse</p>
-                    </div>
-                </div>
-                <div id="leadsContainer"></div>
-            </div>
-            
-            <div id="brokersSection" class="content-section" style="display: none;">
-                <div class="page-header">
-                    <div>
-                        <h1 class="page-title">Gerenciar Usuários</h1>
-                        <p style="color: #888;">Cadastre corretores e administradores</p>
-                    </div>
-                    <button class="btn-primary-panel" onclick="openBrokerModal()"><i class="fas fa-user-plus"></i> Novo Usuário</button>
-                </div>
-                <div id="brokersContainer"></div>
-            </div>
-        </div>
+<div class="painel-container">
+    <div class="sidebar">
+        <nav class="sidebar-menu">
+            <div class="menu-item">Dashboard</div>
+            <div class="menu-item">Imóveis</div>
+            <div class="menu-item">Sair</div>
+        </nav>
     </div>
 
-    <div id="propertyModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title" id="modalTitle">Novo Imóvel</h2>
-                <button class="btn-close" onclick="closePropertyModal()"><i class="fas fa-times"></i></button>
-            </div>
-            <form id="propertyForm" onsubmit="saveProperty(event)">
-                <input type="hidden" id="propertyId">
-                <div class="form-group"><label>Título do Imóvel *</label><input type="text" id="propTitle" required placeholder="Ex: Apartamento Luxo Centro"></div>
-                <div class="form-group"><label>Descrição *</label><textarea id="propDescription" required placeholder="Detalhes..." rows="4"></textarea></div>
-                <div class="form-row">
-                    <div class="form-group"><label>Tipo *</label><select id="propType" required><option value="">Selecione</option><option value="apartamento">Apartamento</option><option value="casa">Casa</option><option value="terreno">Terreno</option><option value="comercial">Comercial</option></select></div>
-                    <div class="form-group"><label>Preço (R$) *</label><input type="number" id="propPrice" required placeholder="850000" step="0.01"></div>
-                </div>
-                <div class="form-group"><label>Localização *</label><input type="text" id="propLocation" required placeholder="Ex: São Paulo, SP"></div>
-                <div class="form-row">
-                    <div class="form-group"><label>Área (m²) *</label><input type="number" id="propArea" required placeholder="120"></div>
-                    <div class="form-group"><label>Quartos *</label><input type="number" id="propBedrooms" required placeholder="3"></div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group"><label>Banheiros *</label><input type="number" id="propBathrooms" required placeholder="2"></div>
-                    <div class="form-group"><label>Vagas *</label><input type="number" id="propGarages" required placeholder="2"></div>
-                </div>
-                <div class="form-group">
-                    <label>Fotos do Imóvel * (Selecione múltiplas fotos)</label>
-                    <div class="image-upload-area" onclick="document.getElementById('propImages').click()">
-                        <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
-                        <div class="upload-text"><strong>Clique para selecionar</strong><br><small>Segure Ctrl para várias fotos</small></div>
-                        <input type="file" id="propImages" accept="image/jpeg,image/jpg,image/png,image/webp" multiple onchange="handleImageUpload(event)">
-                    </div>
-                    <div id="imagePreview" class="image-preview"></div>
-                </div>
-                <button type="submit" class="btn-primary" style="width: 100%; padding: 14px;"><i class="fas fa-save"></i> Salvar Imóvel</button>
-            </form>
-        </div>
+    <div class="main-content">
+        <!-- conteúdo -->
     </div>
+</div>
 
-    <div id="brokerModal" class="modal">
-        <div class="modal-content" style="max-width: 500px;">
-            <div class="modal-header">
-                <h2 class="modal-title" id="brokerModalTitle">Novo Usuário</h2>
-                <button class="btn-close" onclick="closeBrokerModal()"><i class="fas fa-times"></i></button>
-            </div>
-            <form id="brokerForm" onsubmit="saveBroker(event)">
-                <input type="hidden" id="brokerId">
-                <div class="form-group"><label>Nome Completo *</label><input type="text" id="brokerName" required placeholder="Nome completo"></div>
-                <div class="form-group"><label>Usuário (Login) *</label><input type="text" id="brokerUsername" required placeholder="usuario_login"></div>
-                <div class="form-group"><label>E-mail *</label><input type="email" id="brokerEmail" required placeholder="email@exemplo.com"></div>
-                <div class="form-group">
-                    <label>Tipo de Usuário *</label>
-                    <select id="brokerRole" required><option value="corretor">Corretor</option><option value="admin">Administrador</option></select>
-                    <small style="color: #888; font-size: 0.85rem;">Administradores têm acesso total ao sistema</small>
-                </div>
-                <div class="form-group"><label>Senha *</label><input type="password" id="brokerPassword" placeholder="Mínimo 6 caracteres"><small style="color: #666; font-size: 0.85rem;" id="passwordHint">Mínimo 6 caracteres</small></div>
-                <button type="submit" class="btn-primary" style="width: 100%; padding: 14px;"><i class="fas fa-save"></i> Salvar Usuário</button>
-            </form>
-        </div>
-    </div>
-
-    <script src="js/api.js"></script>
-    <script src="js/painel.js"></script>
-    <script src="js/mobile-menu.js"></script>
-
-    <script>
-        // JS FORÇADO PARA O MENU ABRIR (Mantido conforme solicitado)
-        function toggleSidebar() {
-            // Busca o menu pelo nome da classe
-            const sidebar = document.querySelector('.sidebar');
-            
-            if (sidebar) {
-                // Liga/Desliga a classe 'active'
-                sidebar.classList.toggle('active');
-                console.log('🔘 Menu acionado! Classe atual:', sidebar.className);
-            } else {
-                // Se não achar, avisa com um alerta na tela
-                alert('ERRO: Não achei a div .sidebar no seu HTML!');
-            }
-        }
-    </script>
-   <style>
-    /* CSS FORÇADO (Ignora todo o resto) */
-    @media (max-width: 768px) {
-        .sidebar {
-            position: fixed !important;
-            top: 0 !important;
-            left: -320px !important; /* Começa escondido na esquerda */
-            width: 280px !important;
-            height: 100vh !important;
-            background-color: #000 !important; /* Fundo Preto */
-            z-index: 9999999 !important; /* Acima de TUDO */
-            display: block !important;
-            transition: left 0.3s ease-in-out !important;
-            box-shadow: 5px 0 20px rgba(0,0,0,0.8) !important;
-            padding-top: 20px !important;
-        }
-
-        /* Classe mágica que vamos criar no JS */
-        .sidebar.menu-aberto {
-            left: 0 !important; /* Traz pra tela */
-        }
-        
-        /* Ajuste para ver os itens */
-        .sidebar .menu-item {
-            display: flex !important;
-            opacity: 1 !important;
-            visibility: visible !important;
-        }
-    }
-</style>
+<script src="js/api.js"></script>
+<script src="js/painel.js"></script>
+<script src="js/mobile-menu.js"></script>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        console.log("🔧 Iniciando conserto do menu...");
+function toggleSidebar() {
+    const sidebar = document.querySelector('.sidebar');
+    if (!sidebar) return;
 
-        // 1. IDENTIFICAR OS SUSPEITOS
-        var sidebar = document.querySelector('.sidebar');
-        var btn = document.querySelector('.mobile-menu-toggle');
+    sidebar.classList.toggle('active');
 
-        if (!sidebar || !btn) {
-            console.error("❌ ERRO: Não achei a Sidebar ou o Botão!");
-            return;
+    document.body.style.overflow =
+        sidebar.classList.contains('active') ? 'hidden' : '';
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    const sidebar = document.querySelector('.sidebar');
+    const btn = document.querySelector('.mobile-menu-toggle');
+
+    if (!sidebar || !btn) return;
+
+    btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleSidebar();
+    });
+
+    sidebar.addEventListener('click', (e) => {
+        e.stopPropagation();
+    });
+
+    document.addEventListener('click', () => {
+        if (window.innerWidth <= 768 && sidebar.classList.contains('active')) {
+            sidebar.classList.remove('active');
+            document.body.style.overflow = '';
         }
+    });
 
-        // 2. O TELETRANSPORTE (O Segredo!)
-        // Remove a sidebar de onde ela está e cola direto no corpo do site
-        // Assim nada pode cortar ela ou esconder ela.
-        document.body.appendChild(sidebar);
-        
-        // 3. RECRIAR O CLIQUE (Reset total)
-        // Removemos qualquer onclick antigo para não dar conflito
-        btn.onclick = null; 
-        
-        btn.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation(); // Não deixa o clique passar pra trás
-            
-            // Adiciona ou remove a classe que criamos no CSS acima
-            if (sidebar.classList.contains('menu-aberto')) {
-                sidebar.classList.remove('menu-aberto');
-                console.log("🔒 Fechando menu");
-            } else {
-                sidebar.classList.add('menu-aberto');
-                console.log("🔓 Abrindo menu");
+    document.querySelectorAll('.menu-item').forEach(item => {
+        item.addEventListener('click', () => {
+            if (window.innerWidth <= 768) {
+                sidebar.classList.remove('active');
+                document.body.style.overflow = '';
             }
         });
-
-        // 4. FECHAR AO CLICAR EM UM LINK
-        var links = sidebar.querySelectorAll('.menu-item');
-        links.forEach(function(link) {
-            link.addEventListener('click', function() {
-                if(window.innerWidth < 768) {
-                    sidebar.classList.remove('menu-aberto');
-                }
-            });
-        });
     });
+});
 </script>
+
 </body>
 </html>
