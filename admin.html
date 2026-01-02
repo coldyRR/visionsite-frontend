@@ -10,10 +10,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/mobile-styles.css">
 
     <style>
-        /* Estilos Extras e Mobile Force */
+        /* Toggle Switch */
         .switch { position: relative; display: inline-block; width: 50px; height: 24px; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 24px; }
@@ -21,33 +20,52 @@
         input:checked + .slider { background-color: #4CAF50; }
         input:checked + .slider:before { transform: translateX(26px); }
 
+        /* MOBILE MENU */
+        .mobile-menu-toggle {
+            display: none;
+        }
+
         @media (max-width: 768px) {
+            .mobile-menu-toggle {
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                position: fixed !important;
+                top: 20px !important;
+                left: 20px !important;
+                z-index: 10001 !important;
+                background: #c9a961 !important;
+                border: none !important;
+                width: 50px !important;
+                height: 50px !important;
+                border-radius: 50% !important;
+                color: white !important;
+                font-size: 1.5rem !important;
+                cursor: pointer !important;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.5) !important;
+            }
+
             .sidebar {
-                display: block !important;
                 position: fixed !important;
                 top: 0 !important;
                 left: -300px !important;
-                width: 260px !important;
+                width: 280px !important;
                 height: 100vh !important;
-                background-color: #0d0d0d !important;
+                background: #141414 !important;
+                border-right: 1px solid #333 !important;
                 z-index: 10000 !important;
-                transition: left 0.3s ease-in-out !important;
-                box-shadow: 5px 0 15px rgba(0,0,0,0.8) !important;
-                padding-top: 60px !important;
+                transition: left 0.3s ease !important;
+                overflow-y: auto !important;
+                padding: 30px 0 !important;
             }
-            .sidebar.active { left: 0 !important; }
-            .sidebar .menu-item {
-                display: flex !important;
-                color: #fff !important;
-                padding: 15px 20px !important;
-                border-bottom: 1px solid #333 !important;
-                font-size: 16px !important;
+
+            .sidebar.active {
+                left: 0 !important;
             }
-            .mobile-menu-toggle {
-                display: flex !important;
-                align-items: center;
-                justify-content: center;
-                z-index: 10001;
+
+            .main-content {
+                margin-left: 0 !important;
+                padding-top: 80px !important;
             }
         }
     </style>
@@ -156,8 +174,7 @@
                                 <th>Ações</th>
                             </tr>
                         </thead>
-                        <tbody id="propertiesTableBody">
-                            </tbody>
+                        <tbody id="propertiesTableBody"></tbody>
                     </table>
                 </div>
             </div>
@@ -238,100 +255,37 @@
                     <select id="brokerRole" required><option value="corretor">Corretor</option><option value="admin">Administrador</option></select>
                     <small style="color: #888; font-size: 0.85rem;">Administradores têm acesso total ao sistema</small>
                 </div>
-                <div class="form-group"><label>Senha *</label><input type="password" id="brokerPassword" placeholder="Mínimo 6 caracteres"><small style="color: #666; font-size: 0.85rem;" id="passwordHint">Mínimo 6 caracteres</small></div>
+                <div class="form-group"><label>Senha *</label><input type="password" id="brokerPassword" placeholder="Mínimo 6 caracteres"><small style="color: #666; font-size: 0.85rem;">Mínimo 6 caracteres</small></div>
                 <button type="submit" class="btn-primary" style="width: 100%; padding: 14px;"><i class="fas fa-save"></i> Salvar Usuário</button>
             </form>
         </div>
     </div>
 
     <script src="js/api.js"></script>
-    <script src="js/painel.js"></script> <script src="js/mobile-menu.js"></script>
+    <script src="js/painel.js"></script>
 
     <script>
         function toggleSidebar() {
             const sidebar = document.querySelector('.sidebar');
             if (sidebar) {
                 sidebar.classList.toggle('active');
+                document.body.style.overflow = sidebar.classList.contains('active') ? 'hidden' : '';
             }
         }
-    </script>
-   <style>
-    /* CSS FORÇADO (Ignora todo o resto) */
-    @media (max-width: 768px) {
-        .sidebar {
-            position: fixed !important;
-            top: 0 !important;
-            left: -320px !important; /* Começa escondido na esquerda */
-            width: 280px !important;
-            height: 100vh !important;
-            background-color: #000 !important; /* Fundo Preto */
-            z-index: 9999999 !important; /* Acima de TUDO */
-            display: block !important;
-            transition: left 0.3s ease-in-out !important;
-            box-shadow: 5px 0 20px rgba(0,0,0,0.8) !important;
-            padding-top: 20px !important;
-        }
 
-        /* Classe mágica que vamos criar no JS */
-        .sidebar.menu-aberto {
-            left: 0 !important; /* Traz pra tela */
-        }
-        
-        /* Ajuste para ver os itens */
-        .sidebar .menu-item {
-            display: flex !important;
-            opacity: 1 !important;
-            visibility: visible !important;
-        }
-    }
-</style>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        console.log("🔧 Iniciando conserto do menu...");
-
-        // 1. IDENTIFICAR OS SUSPEITOS
-        var sidebar = document.querySelector('.sidebar');
-        var btn = document.querySelector('.mobile-menu-toggle');
-
-        if (!sidebar || !btn) {
-            console.error("❌ ERRO: Não achei a Sidebar ou o Botão!");
-            return;
-        }
-
-        // 2. O TELETRANSPORTE (O Segredo!)
-        // Remove a sidebar de onde ela está e cola direto no corpo do site
-        // Assim nada pode cortar ela ou esconder ela.
-        document.body.appendChild(sidebar);
-        
-        // 3. RECRIAR O CLIQUE (Reset total)
-        // Removemos qualquer onclick antigo para não dar conflito
-        btn.onclick = null; 
-        
-        btn.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation(); // Não deixa o clique passar pra trás
-            
-            // Adiciona ou remove a classe que criamos no CSS acima
-            if (sidebar.classList.contains('menu-aberto')) {
-                sidebar.classList.remove('menu-aberto');
-                console.log("🔒 Fechando menu");
-            } else {
-                sidebar.classList.add('menu-aberto');
-                console.log("🔓 Abrindo menu");
-            }
-        });
-
-        // 4. FECHAR AO CLICAR EM UM LINK
-        var links = sidebar.querySelectorAll('.menu-item');
-        links.forEach(function(link) {
-            link.addEventListener('click', function() {
-                if(window.innerWidth < 768) {
-                    sidebar.classList.remove('menu-aberto');
-                }
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    if (window.innerWidth <= 768) {
+                        const sidebar = document.querySelector('.sidebar');
+                        if (sidebar && sidebar.classList.contains('active')) {
+                            sidebar.classList.remove('active');
+                            document.body.style.overflow = '';
+                        }
+                    }
+                });
             });
         });
-    });
-</script>
+    </script>
 </body>
 </html>
