@@ -400,6 +400,12 @@ ul{list-style:none}
         background-attachment: scroll; /* No celular rola normal pra não bugar */
         min-height: 300px;
     }
+}
+/* ============================================
+   MENU MOBILE - SOLUÇÃO DEFINITIVA V2
+   COPIE E COLE NO FINAL DO style.css
+   ============================================ */
+
 /* Esconde o botão no desktop */
 .mobile-menu-toggle {
     display: none;
