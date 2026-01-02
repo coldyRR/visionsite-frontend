@@ -1,86 +1,46 @@
-// ============================================
-// MOBILE MENU - VERSÃO SIMPLIFICADA
-// ============================================
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('📱 Mobile Script Carregado!');
 
-console.log('🔄 Carregando mobile.js...');
-
-// Função para abrir/fechar sidebar
-function toggleSidebar() {
-    console.log('🔘 toggleSidebar chamado!');
-    
+    // Seleciona os elementos
+    const btn = document.querySelector('.mobile-menu-toggle');
     const sidebar = document.querySelector('.sidebar');
-    
-    if (!sidebar) {
-        console.error('❌ Sidebar não encontrada!');
+
+    // 1. Verifica se o botão existe
+    if (!btn) {
+        console.error('❌ ERRO: Botão .mobile-menu-toggle não encontrado no HTML!');
         return;
     }
-    
-    console.log('✅ Sidebar encontrada, toggling...');
-    sidebar.classList.toggle('mobile-active');
-    
-    if (sidebar.classList.contains('mobile-active')) {
-        console.log('✅ Sidebar ABERTA');
-        document.body.style.overflow = 'hidden';
-    } else {
-        console.log('✅ Sidebar FECHADA');
-        document.body.style.overflow = '';
-    }
-}
 
-// Fechar sidebar ao clicar fora
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('✅ DOM carregado, configurando eventos...');
-    
-    document.addEventListener('click', function(event) {
-        const sidebar = document.querySelector('.sidebar');
-        const menuToggle = document.querySelector('.mobile-menu-toggle');
+    console.log('✅ Botão mobile encontrado. Adicionando evento de clique...');
+
+    // 2. Adiciona o evento de clique direto pelo JS (mais seguro que onclick no HTML)
+    btn.addEventListener('click', function(event) {
+        event.preventDefault(); // Evita bugs de recarregamento
+        event.stopPropagation(); // Garante que o clique é só do botão
         
-        if (!sidebar || !menuToggle) return;
+        console.log('🔘 Botão CLICADO!');
         
-        // Se clicou fora da sidebar E fora do botão
-        if (!sidebar.contains(event.target) && 
-            !menuToggle.contains(event.target) && 
-            sidebar.classList.contains('mobile-active')) {
+        if (sidebar) {
+            sidebar.classList.toggle('mobile-active');
             
-            console.log('👆 Clicou fora, fechando sidebar...');
-            toggleSidebar();
+            // Log para confirmar estado
+            if (sidebar.classList.contains('mobile-active')) {
+                console.log('📂 Sidebar: ABERTA');
+            } else {
+                console.log('📂 Sidebar: FECHADA');
+            }
+        } else {
+            console.error('❌ ERRO: Sidebar não encontrada!');
+        }
+    });
+
+    // 3. Fechar ao clicar fora (Mantido do seu código original)
+    document.addEventListener('click', function(event) {
+        if (sidebar && sidebar.classList.contains('mobile-active')) {
+            if (!sidebar.contains(event.target) && !btn.contains(event.target)) {
+                console.log('👋 Clicou fora, fechando sidebar...');
+                sidebar.classList.remove('mobile-active');
+            }
         }
     });
 });
-
-// Filtro de imóveis (admin)
-function filterAdminProperties() {
-    const searchInput = document.getElementById('adminSearchInput')?.value.toLowerCase() || '';
-    const filterType = document.getElementById('adminFilterType')?.value || '';
-    const filterStatus = document.getElementById('adminFilterStatus')?.value || '';
-    
-    const rows = document.querySelectorAll('#propertiesTableBody tr');
-    
-    rows.forEach(row => {
-        const title = row.querySelector('td:nth-child(2)')?.textContent.toLowerCase() || '';
-        const location = row.querySelector('td:nth-child(3)')?.textContent.toLowerCase() || '';
-        const type = row.getAttribute('data-type') || '';
-        const active = row.getAttribute('data-active') || '';
-        
-        let showRow = true;
-        
-        if (searchInput && !title.includes(searchInput) && !location.includes(searchInput)) {
-            showRow = false;
-        }
-        
-        if (filterType && type !== filterType) {
-            showRow = false;
-        }
-        
-        if (filterStatus === 'active' && active !== 'true') {
-            showRow = false;
-        }
-        if (filterStatus === 'inactive' && active === 'true') {
-            showRow = false;
-        }
-        
-        row.style.display = showRow ? '' : 'none';
-    });
-}
-
-console.log('✅ mobile.js carregado com sucesso!');
