@@ -255,48 +255,83 @@
             }
         }
     </script>
-    <script>
-    // Sobrescreve a função antiga e força o menu a funcionar
-    window.toggleSidebar = function() {
-        const sidebar = document.querySelector('.sidebar');
-        const container = document.querySelector('.painel-container');
+   <style>
+    /* CSS FORÇADO (Ignora todo o resto) */
+    @media (max-width: 768px) {
+        .sidebar {
+            position: fixed !important;
+            top: 0 !important;
+            left: -320px !important; /* Começa escondido na esquerda */
+            width: 280px !important;
+            height: 100vh !important;
+            background-color: #000 !important; /* Fundo Preto */
+            z-index: 9999999 !important; /* Acima de TUDO */
+            display: block !important;
+            transition: left 0.3s ease-in-out !important;
+            box-shadow: 5px 0 20px rgba(0,0,0,0.8) !important;
+            padding-top: 20px !important;
+        }
+
+        /* Classe mágica que vamos criar no JS */
+        .sidebar.menu-aberto {
+            left: 0 !important; /* Traz pra tela */
+        }
         
-        if (!sidebar) {
-            alert("ERRO: Não achei a Sidebar!");
+        /* Ajuste para ver os itens */
+        .sidebar .menu-item {
+            display: flex !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+    }
+</style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        console.log("🔧 Iniciando conserto do menu...");
+
+        // 1. IDENTIFICAR OS SUSPEITOS
+        var sidebar = document.querySelector('.sidebar');
+        var btn = document.querySelector('.mobile-menu-toggle');
+
+        if (!sidebar || !btn) {
+            console.error("❌ ERRO: Não achei a Sidebar ou o Botão!");
             return;
         }
 
-        // 1. TELETRANSPORTE: Se a sidebar estiver presa no container, joga ela pro Body
-        // Isso resolve o problema dela ficar cortada ou invisível
-        if (sidebar.parentElement !== document.body) {
-            document.body.appendChild(sidebar);
-        }
+        // 2. O TELETRANSPORTE (O Segredo!)
+        // Remove a sidebar de onde ela está e cola direto no corpo do site
+        // Assim nada pode cortar ela ou esconder ela.
+        document.body.appendChild(sidebar);
+        
+        // 3. RECRIAR O CLIQUE (Reset total)
+        // Removemos qualquer onclick antigo para não dar conflito
+        btn.onclick = null; 
+        
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation(); // Não deixa o clique passar pra trás
+            
+            // Adiciona ou remove a classe que criamos no CSS acima
+            if (sidebar.classList.contains('menu-aberto')) {
+                sidebar.classList.remove('menu-aberto');
+                console.log("🔒 Fechando menu");
+            } else {
+                sidebar.classList.add('menu-aberto');
+                console.log("🔓 Abrindo menu");
+            }
+        });
 
-        // 2. FORÇA BRUTA VISUAL (CSS via Javascript)
-        // Garante que ninguém vai mandar nela além da gente
-        sidebar.style.position = 'fixed';
-        sidebar.style.top = '0';
-        sidebar.style.height = '100vh'; // Altura total
-        sidebar.style.width = '260px';
-        sidebar.style.backgroundColor = '#0d0d0d'; // Fundo preto
-        sidebar.style.zIndex = '9999999'; // Fica em cima de TUDO
-        sidebar.style.transition = 'left 0.3s ease'; // Animação
-        sidebar.style.display = 'block'; // Garante que existe
-
-        // 3. A LÓGICA DE ABRIR E FECHAR
-        // Se ela já está na posição 0 (aberta), a gente esconde (-300px)
-        if (sidebar.style.left === '0px') {
-            sidebar.style.left = '-300px';
-        } else {
-            sidebar.style.left = '0px'; // Traz pra tela
-        }
-    };
-
-    // Garante que o menu comece fechado no celular
-    if (window.innerWidth < 768) {
-        const sidebar = document.querySelector('.sidebar');
-        if (sidebar) sidebar.style.left = '-300px';
-    }
+        // 4. FECHAR AO CLICAR EM UM LINK
+        var links = sidebar.querySelectorAll('.menu-item');
+        links.forEach(function(link) {
+            link.addEventListener('click', function() {
+                if(window.innerWidth < 768) {
+                    sidebar.classList.remove('menu-aberto');
+                }
+            });
+        });
+    });
 </script>
 </body>
 </html>
