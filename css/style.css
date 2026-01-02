@@ -464,14 +464,14 @@ ul{list-style:none}
     top: 15px;
     left: 15px;
     z-index: 2000; /* Fica por cima de TUDO */
-    background: #000; /* Fundo preto */
+    background: #0f0f0f; /* Fundo preto */
     color: #fff; /* Ícone branco */
     border: 1px solid #333;
     padding: 10px 15px;
     border-radius: 8px;
     font-size: 1.2rem;
     cursor: pointer;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    box-shadow: 0 4px 10px rgba(48, 48, 48, 0.5);
 }
 
 /* 2. Regras SÓ PARA CELULAR (Telas menores que 768px) */
@@ -491,7 +491,7 @@ ul{list-style:none}
         z-index: 1000;
         transition: left 0.3s ease;
         width: 260px;
-        box-shadow: 5px 0 15px rgba(0,0,0,0.5);
+        box-shadow: 5px 0 15px rgba(65, 63, 63, 0.5);
     }
 
     /* Quando clicar, adiciona essa classe pra trazer a barra de volta */
