@@ -1,42 +1,54 @@
 // ============================================
-// MOBILE MENU TOGGLE
+// MOBILE MENU - VERSÃO SIMPLIFICADA
 // ============================================
 
+console.log('🔄 Carregando mobile.js...');
+
+// Função para abrir/fechar sidebar
 function toggleSidebar() {
+    console.log('🔘 toggleSidebar chamado!');
+    
     const sidebar = document.querySelector('.sidebar');
-    const mainContent = document.querySelector('.main-content');
     
-    if (sidebar) {
-        sidebar.classList.toggle('mobile-active');
+    if (!sidebar) {
+        console.error('❌ Sidebar não encontrada!');
+        return;
     }
     
-    if (mainContent) {
-        mainContent.classList.toggle('sidebar-open');
-    }
+    console.log('✅ Sidebar encontrada, toggling...');
+    sidebar.classList.toggle('mobile-active');
     
-    // Prevenir scroll no body quando sidebar aberta
-    if (sidebar && sidebar.classList.contains('mobile-active')) {
+    if (sidebar.classList.contains('mobile-active')) {
+        console.log('✅ Sidebar ABERTA');
         document.body.style.overflow = 'hidden';
     } else {
+        console.log('✅ Sidebar FECHADA');
         document.body.style.overflow = '';
     }
 }
 
-// Fechar sidebar ao clicar fora (mobile)
-document.addEventListener('click', function(event) {
-    const sidebar = document.querySelector('.sidebar');
-    const menuToggle = document.querySelector('.mobile-menu-toggle');
+// Fechar sidebar ao clicar fora
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('✅ DOM carregado, configurando eventos...');
     
-    if (sidebar && menuToggle) {
+    document.addEventListener('click', function(event) {
+        const sidebar = document.querySelector('.sidebar');
+        const menuToggle = document.querySelector('.mobile-menu-toggle');
+        
+        if (!sidebar || !menuToggle) return;
+        
+        // Se clicou fora da sidebar E fora do botão
         if (!sidebar.contains(event.target) && 
             !menuToggle.contains(event.target) && 
             sidebar.classList.contains('mobile-active')) {
+            
+            console.log('👆 Clicou fora, fechando sidebar...');
             toggleSidebar();
         }
-    }
+    });
 });
 
-// Filtro de imóveis no admin (já existente, mantido)
+// Filtro de imóveis (admin)
 function filterAdminProperties() {
     const searchInput = document.getElementById('adminSearchInput')?.value.toLowerCase() || '';
     const filterType = document.getElementById('adminFilterType')?.value || '';
@@ -52,17 +64,14 @@ function filterAdminProperties() {
         
         let showRow = true;
         
-        // Filtro de busca
         if (searchInput && !title.includes(searchInput) && !location.includes(searchInput)) {
             showRow = false;
         }
         
-        // Filtro de tipo
         if (filterType && type !== filterType) {
             showRow = false;
         }
         
-        // Filtro de status
         if (filterStatus === 'active' && active !== 'true') {
             showRow = false;
         }
@@ -74,4 +83,4 @@ function filterAdminProperties() {
     });
 }
 
-console.log('✅ Mobile menu carregado');
+console.log('✅ mobile.js carregado com sucesso!');
