@@ -453,13 +453,54 @@ document.addEventListener('DOMContentLoaded', loadPainelDashboard);
 // MENU MOBILE
 // ============================================
 function toggleSidebar() {
-    const sidebar = document.querySelector('.sidebar');
-    const overlay = document.getElementById('mobileOverlay'); // Opcional, mas bom ter
+    console.log('🔘 toggleSidebar CHAMADO!');
     
-    // Liga/Desliga a classe 'active' que criamos no CSS
+    const sidebar = document.querySelector('.sidebar');
+    const body = document.body;
+    
+    if (!sidebar) {
+        console.error('❌ SIDEBAR NÃO ENCONTRADA!');
+        alert('ERRO: Sidebar não encontrada no HTML!');
+        return;
+    }
+    
+    console.log('✅ Sidebar encontrada:', sidebar);
+    
+    // Toggle na sidebar
     sidebar.classList.toggle('active');
+    
+    // Toggle no body (para overlay)
+    body.classList.toggle('menu-open');
+    
+    // Log do estado
+    if (sidebar.classList.contains('active')) {
+        console.log('✅ MENU ABERTO!');
+        console.log('Classes da sidebar:', sidebar.className);
+        document.body.style.overflow = 'hidden'; // Bloqueia scroll
+    } else {
+        console.log('✅ MENU FECHADO!');
+        document.body.style.overflow = ''; // Libera scroll
+    }
 }
 
+// Fechar ao clicar no overlay escuro
+document.addEventListener('click', function(event) {
+    const sidebar = document.querySelector('.sidebar');
+    const menuToggle = document.querySelector('.mobile-menu-toggle');
+    
+    if (!sidebar || !menuToggle) return;
+    
+    // Se clicou fora da sidebar E fora do botão
+    if (!sidebar.contains(event.target) && 
+        !menuToggle.contains(event.target) && 
+        sidebar.classList.contains('active')) {
+        
+        console.log('👆 Clicou fora, fechando menu...');
+        toggleSidebar();
+    }
+});
+
+console.log('✅ Script mobile menu carregado com sucesso!');
 // Fecha o menu automaticamente quando clica em uma opção (pra não ficar na frente)
 document.querySelectorAll('.menu-item').forEach(item => {
     item.addEventListener('click', () => {
