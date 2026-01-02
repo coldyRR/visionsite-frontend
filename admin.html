@@ -3,26 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel do Corretor - VISION</title>
+    <title>Painel Administrativo - VISION</title>
     <link rel="icon" type="image/png" href="img/favicon.png">
-    <link rel="stylesheet" href="css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/mobile-styles.css">
+
     <style>
-        /* Toggle Switch */
+        /* Estilos Extras e Mobile Force */
         .switch { position: relative; display: inline-block; width: 50px; height: 24px; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 24px; }
         .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
         input:checked + .slider { background-color: #4CAF50; }
         input:checked + .slider:before { transform: translateX(26px); }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                display: block !important;
+                position: fixed !important;
+                top: 0 !important;
+                left: -300px !important;
+                width: 260px !important;
+                height: 100vh !important;
+                background-color: #0d0d0d !important;
+                z-index: 10000 !important;
+                transition: left 0.3s ease-in-out !important;
+                box-shadow: 5px 0 15px rgba(0,0,0,0.8) !important;
+                padding-top: 60px !important;
+            }
+            .sidebar.active { left: 0 !important; }
+            .sidebar .menu-item {
+                display: flex !important;
+                color: #fff !important;
+                padding: 15px 20px !important;
+                border-bottom: 1px solid #333 !important;
+                font-size: 16px !important;
+            }
+            .mobile-menu-toggle {
+                display: flex !important;
+                align-items: center;
+                justify-content: center;
+                z-index: 10001;
+            }
+        }
     </style>
-    <link rel="stylesheet" href="css/mobile-styles.css">
 </head>
 <body>
+
     <button class="mobile-menu-toggle" onclick="toggleSidebar()">
         <i class="fas fa-bars"></i>
     </button>
+
     <div class="painel-container">
         <div class="sidebar">
             <div class="sidebar-header">
@@ -30,7 +65,7 @@
                     <span class="sidebar-logo-icon">V</span>
                     <div>
                         <div class="sidebar-title">VISION</div>
-                        <div class="user-info" id="userInfo">Corretor</div>
+                        <div class="user-info" id="userInfo">Administrador</div>
                     </div>
                 </div>
             </div>
@@ -40,12 +75,12 @@
                     <i class="fas fa-home"></i> <span>Dashboard</span>
                 </div>
                 <div class="menu-item" onclick="showPainelSection('properties')">
-                    <i class="fas fa-building"></i> <span>Meus Imóveis</span>
+                    <i class="fas fa-building"></i> <span>Todos os Imóveis</span>
                 </div>
-                <div class="menu-item" id="leadsMenuItem" style="display: none;" onclick="showPainelSection('leads')">
+                <div class="menu-item" id="leadsMenuItem" onclick="showPainelSection('leads')">
                     <i class="fas fa-users"></i> <span>Cadastros de Clientes</span>
                 </div>
-                <div class="menu-item" id="brokersMenuItem" style="display: none;" onclick="showPainelSection('brokers')">
+                <div class="menu-item" id="brokersMenuItem" onclick="showPainelSection('brokers')">
                     <i class="fas fa-user-tie"></i> <span>Gerenciar Usuários</span>
                 </div>
                 <div class="menu-item" onclick="authAPI.logout()">
@@ -58,8 +93,8 @@
             <div id="dashboardSection" class="content-section">
                 <div class="page-header">
                     <div>
-                        <h1 class="page-title">Dashboard</h1>
-                        <p style="color: #888;">Bem-vindo ao painel</p>
+                        <h1 class="page-title">Dashboard Admin</h1>
+                        <p style="color: #888;">Visão geral do sistema</p>
                     </div>
                     <button class="btn-logout" onclick="authAPI.logout()"><i class="fas fa-sign-out-alt"></i> Sair</button>
                 </div>
@@ -68,24 +103,24 @@
                     <div class="stat-card">
                         <div class="stat-card-icon"><i class="fas fa-building"></i></div>
                         <div class="stat-card-value" id="totalProperties">0</div>
-                        <div class="stat-card-label">Imóveis Cadastrados</div>
+                        <div class="stat-card-label">Total de Imóveis</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-card-icon"><i class="fas fa-check-circle"></i></div>
                         <div class="stat-card-value" id="propertiesActive">0</div>
-                        <div class="stat-card-label">Imóveis Disponíveis</div>
+                        <div class="stat-card-label">Imóveis Ativos</div>
                     </div>
-                    <div class="stat-card" id="leadsCard" style="display: none;">
+                    <div class="stat-card" id="leadsCard">
                         <div class="stat-card-icon"><i class="fas fa-users"></i></div>
                         <div class="stat-card-value" id="totalLeads">0</div>
-                        <div class="stat-card-label">Clientes Interessados</div>
+                        <div class="stat-card-label">Leads Totais</div>
                     </div>
                 </div>
             </div>
             
             <div id="propertiesSection" class="content-section" style="display: none;">
                 <div class="section-header">
-                    <h2>Gerenciar Imóveis</h2>
+                    <h2>Gerenciar Todos os Imóveis</h2>
                     <button class="btn-primary" onclick="openPropertyModal()"><i class="fas fa-plus"></i> Novo Imóvel</button>
                 </div>
 
@@ -114,11 +149,12 @@
                             <tr>
                                 <th>Imagem</th>
                                 <th>Título</th>
-                                <th id="thOwner" style="display:none;">Cadastrado Por</th>
+                                <th id="thOwner">Cadastrado Por</th>
                                 <th>Localização</th>
                                 <th>Preço</th>
                                 <th>Disponível</th>
-                                <th>Ações</th> </tr>
+                                <th>Ações</th>
+                            </tr>
                         </thead>
                         <tbody id="propertiesTableBody">
                             </tbody>
@@ -130,7 +166,7 @@
                 <div class="page-header">
                     <div>
                         <h1 class="page-title">Cadastros de Clientes</h1>
-                        <p style="color: #888;">Todos os clientes que demonstraram interesse</p>
+                        <p style="color: #888;">Todos os clientes interessados</p>
                     </div>
                 </div>
                 <div id="leadsContainer"></div>
@@ -209,63 +245,15 @@
     </div>
 
     <script src="js/api.js"></script>
-    <script src="js/painel.js"></script>
-    <script src="js/mobile-menu.js"></script>
-    <style>
-    /* CSS FORÇADO PARA O MENU APARECER */
-    @media (max-width: 768px) {
-        .sidebar {
-            display: block !important;
-            position: fixed !important;
-            top: 0 !important;
-            left: -300px !important; /* Escondido na esquerda */
-            width: 260px !important;
-            height: 100vh !important;
-            background-color: #0d0d0d !important; /* Fundo Preto Quase Total */
-            z-index: 10000 !important; /* Fica em cima de tudo */
-            transition: left 0.3s ease-in-out !important;
-            box-shadow: 5px 0 15px rgba(0,0,0,0.8) !important;
-            padding-top: 60px !important; /* Espaço pro topo */
-        }
+    <script src="js/painel.js"></script> <script src="js/mobile-menu.js"></script>
 
-        /* Classe que faz o menu entrar na tela */
-        .sidebar.active {
-            left: 0 !important;
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            if (sidebar) {
+                sidebar.classList.toggle('active');
+            }
         }
-
-        /* Garante que os textos do menu apareçam */
-        .sidebar .menu-item {
-            display: flex !important;
-            color: #fff !important;
-            padding: 15px 20px !important;
-            border-bottom: 1px solid #333 !important;
-            font-size: 16px !important;
-        }
-        
-        /* Ajusta o ícone do botão */
-        .mobile-menu-toggle {
-            display: flex !important;
-            align-items: center;
-            justify-content: center;
-        }
-    }
-</style>
-
-<script>
-    // JS FORÇADO PARA O MENU ABRIR
-    function toggleSidebar() {
-        // Busca o menu pelo nome da classe
-        const sidebar = document.querySelector('.sidebar');
-        
-        if (sidebar) {
-            // Liga/Desliga a classe 'active'
-            sidebar.classList.toggle('active');
-            console.log('🔘 Menu acionado! Classe atual:', sidebar.className);
-        } else {
-            // Se não achar, avisa com um alerta na tela
-            alert('ERRO: Não achei a div .sidebar no seu HTML!');
-        }
-    }
-</script>
+    </script>
 </body>
 </html>

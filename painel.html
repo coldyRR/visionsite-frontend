@@ -5,10 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel do Corretor - VISION</title>
     <link rel="icon" type="image/png" href="img/favicon.png">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/mobile-styles.css">
+
     <style>
         /* Toggle Switch */
         .switch { position: relative; display: inline-block; width: 50px; height: 24px; }
@@ -17,13 +20,51 @@
         .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
         input:checked + .slider { background-color: #4CAF50; }
         input:checked + .slider:before { transform: translateX(26px); }
+
+        /* CSS FORÇADO PARA O MENU APARECER NO MOBILE */
+        @media (max-width: 768px) {
+            .sidebar {
+                display: block !important;
+                position: fixed !important;
+                top: 0 !important;
+                left: -300px !important; /* Escondido na esquerda */
+                width: 260px !important;
+                height: 100vh !important;
+                background-color: #0d0d0d !important; /* Fundo Preto */
+                z-index: 10000 !important; /* Fica em cima de tudo */
+                transition: left 0.3s ease-in-out !important;
+                box-shadow: 5px 0 15px rgba(0,0,0,0.8) !important;
+                padding-top: 60px !important;
+            }
+
+            /* Classe que faz o menu entrar na tela */
+            .sidebar.active {
+                left: 0 !important;
+            }
+
+            .sidebar .menu-item {
+                display: flex !important;
+                color: #fff !important;
+                padding: 15px 20px !important;
+                border-bottom: 1px solid #333 !important;
+                font-size: 16px !important;
+            }
+            
+            .mobile-menu-toggle {
+                display: flex !important;
+                align-items: center;
+                justify-content: center;
+                z-index: 10001; /* Botão acima do menu se precisar */
+            }
+        }
     </style>
-    <link rel="stylesheet" href="css/mobile-styles.css">
 </head>
 <body>
+
     <button class="mobile-menu-toggle" onclick="toggleSidebar()">
         <i class="fas fa-bars"></i>
     </button>
+
     <div class="painel-container">
         <div class="sidebar">
             <div class="sidebar-header">
@@ -212,65 +253,22 @@
     <script src="js/api.js"></script>
     <script src="js/painel.js"></script>
     <script src="js/mobile-menu.js"></script>
-    <style>
-    /* CSS FORÇADO PARA O MENU APARECER */
-    @media (max-width: 768px) {
-        .sidebar {
-            display: block !important;
-            position: fixed !important;
-            top: 0 !important;
-            left: -300px !important; /* Escondido na esquerda */
-            width: 260px !important;
-            height: 100vh !important;
-            background-color: #0d0d0d !important; /* Fundo Preto Quase Total */
-            z-index: 10000 !important; /* Fica em cima de tudo */
-            transition: left 0.3s ease-in-out !important;
-            box-shadow: 5px 0 15px rgba(0,0,0,0.8) !important;
-            padding-top: 60px !important; /* Espaço pro topo */
-        }
 
-        /* Classe que faz o menu entrar na tela */
-        .sidebar.active {
-            left: 0 !important;
+    <script>
+        // JS FORÇADO PARA O MENU ABRIR (Mantido conforme solicitado)
+        function toggleSidebar() {
+            // Busca o menu pelo nome da classe
+            const sidebar = document.querySelector('.sidebar');
+            
+            if (sidebar) {
+                // Liga/Desliga a classe 'active'
+                sidebar.classList.toggle('active');
+                console.log('🔘 Menu acionado! Classe atual:', sidebar.className);
+            } else {
+                // Se não achar, avisa com um alerta na tela
+                alert('ERRO: Não achei a div .sidebar no seu HTML!');
+            }
         }
-
-        /* Garante que os textos do menu apareçam */
-        .sidebar .menu-item {
-            display: flex !important;
-            color: #fff !important;
-            padding: 15px 20px !important;
-            border-bottom: 1px solid #333 !important;
-            font-size: 16px !important;
-        }
-        
-        /* Ajusta o ícone do botão */
-        .mobile-menu-toggle {
-            display: flex !important;
-            align-items: center;
-            justify-content: center;
-        }
-    }
-</style>
-
-<script>
-    // JS FORÇADO PARA O MENU ABRIR
-    function toggleSidebar() {
-        // Busca o menu pelo nome da classe
-        const sidebar = document.querySelector('.sidebar');
-        
-        if (sidebar) {
-            // Liga/Desliga a classe 'active'
-            sidebar.classList.toggle('active');
-            console.log('🔘 Menu acionado! Classe atual:', sidebar.className);
-        } else {
-            // Se não achar, avisa com um alerta na tela
-            alert('ERRO: Não achei a div .sidebar no seu HTML!');
-        }
-    }
-</script>
-        <button class="mobile-menu-toggle" onclick="toggleSidebar()">
-        <i class="fas fa-bars"></i>
-    </button>
-    <div id="brokerModal" class="modal">
-  </body>
+    </script>
+</body>
 </html>
