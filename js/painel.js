@@ -453,38 +453,52 @@ document.addEventListener('DOMContentLoaded', loadPainelDashboard);
 // MENU MOBILE
 // ============================================
 function toggleSidebar() {
-    console.log('🔘 toggleSidebar CHAMADO!');
+    console.log('🔘 BOTÃO CLICADO!');
     
     const sidebar = document.querySelector('.sidebar');
-    const body = document.body;
     
     if (!sidebar) {
-        console.error('❌ SIDEBAR NÃO ENCONTRADA!');
-        alert('ERRO: Sidebar não encontrada no HTML!');
+        console.error('❌ SIDEBAR NÃO EXISTE!');
+        alert('ERRO: Não encontrei o menu lateral!');
         return;
     }
     
-    console.log('✅ Sidebar encontrada:', sidebar);
-    
-    // Toggle na sidebar
+    // Toggle da classe 'active'
     sidebar.classList.toggle('active');
     
-    // Toggle no body (para overlay)
-    body.classList.toggle('menu-open');
+    // Log do estado atual
+    const isOpen = sidebar.classList.contains('active');
+    console.log(isOpen ? '✅ MENU ABERTO!' : '✅ MENU FECHADO!');
+    console.log('Classes da sidebar:', sidebar.className);
     
-    // Log do estado
-    if (sidebar.classList.contains('active')) {
-        console.log('✅ MENU ABERTO!');
-        console.log('Classes da sidebar:', sidebar.className);
-        document.body.style.overflow = 'hidden'; // Bloqueia scroll
+    // Bloqueia/libera scroll da página
+    if (isOpen) {
+        document.body.style.overflow = 'hidden';
     } else {
-        console.log('✅ MENU FECHADO!');
-        document.body.style.overflow = ''; // Libera scroll
+        document.body.style.overflow = '';
     }
 }
 
-// Fechar ao clicar no overlay escuro
+// Fecha o menu ao clicar em qualquer item do menu
+document.querySelectorAll('.menu-item').forEach(item => {
+    item.addEventListener('click', function() {
+        // Se estiver no mobile (tela pequena)
+        if (window.innerWidth <= 768) {
+            const sidebar = document.querySelector('.sidebar');
+            if (sidebar && sidebar.classList.contains('active')) {
+                sidebar.classList.remove('active');
+                document.body.style.overflow = '';
+                console.log('✅ Menu fechado após clicar no item');
+            }
+        }
+    });
+});
+
+// Fecha o menu ao clicar fora dele
 document.addEventListener('click', function(event) {
+    // Só funciona no mobile
+    if (window.innerWidth > 768) return;
+    
     const sidebar = document.querySelector('.sidebar');
     const menuToggle = document.querySelector('.mobile-menu-toggle');
     
@@ -495,18 +509,10 @@ document.addEventListener('click', function(event) {
         !menuToggle.contains(event.target) && 
         sidebar.classList.contains('active')) {
         
-        console.log('👆 Clicou fora, fechando menu...');
-        toggleSidebar();
+        console.log('👆 Clicou fora, fechando...');
+        sidebar.classList.remove('active');
+        document.body.style.overflow = '';
     }
 });
 
-console.log('✅ Script mobile menu carregado com sucesso!');
-// Fecha o menu automaticamente quando clica em uma opção (pra não ficar na frente)
-document.querySelectorAll('.menu-item').forEach(item => {
-    item.addEventListener('click', () => {
-        // Se estiver no celular (tela pequena), fecha o menu ao clicar
-        if (window.innerWidth <= 768) {
-            document.querySelector('.sidebar').classList.remove('active');
-        }
-    });
-});
+console.log('✅ Script mobile menu carregado!');
