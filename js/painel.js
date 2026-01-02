@@ -98,7 +98,7 @@ function showPainelSection(section) {
 // 1. Carrega dados e aplica permissões iniciais
 async function loadPropertiesTable() {
     const tbody = document.getElementById('propertiesTableBody');
-    const thOwner = document.getElementById('thOwner'); // Coluna "Cadastrado Por"
+    const thOwner = document.getElementById('thOwner');
     
     try {
         const response = await propertiesAPI.getAll({ active: 'all' });
@@ -106,25 +106,17 @@ async function loadPropertiesTable() {
 
         // FILTRAGEM POR PERMISSÃO
         if (currentUserRole !== 'admin') {
-            // Se for Corretor: Só vê os próprios imóveis
-            // Verifica se o ID do dono bate com o ID do usuário logado
             globalPropertiesList = allProperties.filter(p => {
-                const ownerId = p.owner?._id || p.owner; // Garante que pega o ID mesmo se for objeto
+                const ownerId = p.owner?._id || p.owner;
                 return ownerId === currentUserId;
             });
-            
-            // Esconde coluna de dono (desnecessária pra ele)
             if(thOwner) thOwner.style.display = 'none'; 
         } else {
-            // Se for Admin: Vê tudo
             globalPropertiesList = allProperties;
-            
-            // Mostra coluna de dono
             if(thOwner) thOwner.style.display = 'table-cell';
         }
 
-        // Renderiza a tabela filtrada
-        filterAdminProperties(); // Chama o filtro pra desenhar (já pega o estado atual dos inputs)
+        filterAdminProperties();
 
     } catch (error) {
         console.error(error);
@@ -132,21 +124,16 @@ async function loadPropertiesTable() {
     }
 }
 
-// 2. Filtra a lista com base na Barra de Busca (Nome, Tipo, Status)
+// 2. Filtra a lista com base na Barra de Busca
 function filterAdminProperties() {
     const term = document.getElementById('adminSearchInput')?.value.toLowerCase() || '';
     const type = document.getElementById('adminFilterType')?.value || '';
     const status = document.getElementById('adminFilterStatus')?.value || '';
 
     const filtered = globalPropertiesList.filter(p => {
-        // Busca por Texto (Título ou Cidade)
         const matchesText = p.title.toLowerCase().includes(term) || 
                           p.location.toLowerCase().includes(term);
-        
-        // Busca por Tipo
         const matchesType = type === '' || p.type === type;
-
-        // Busca por Status (Ativo/Inativo)
         let matchesStatus = true;
         if (status === 'active') matchesStatus = p.active === true;
         if (status === 'inactive') matchesStatus = p.active === false;
@@ -167,8 +154,6 @@ function renderPropertiesTable(properties) {
     }
 
     tbody.innerHTML = properties.map(p => {
-        // Lógica do Dono (Quem cadastrou)
-        // Tenta pegar o nome de várias formas (objeto populado ou só ID)
         let ownerName = '---';
         if (p.owner && p.owner.name) ownerName = p.owner.name;
         else if (p.ownerName) ownerName = p.ownerName;
@@ -176,7 +161,6 @@ function renderPropertiesTable(properties) {
         const ownerCell = currentUserRole === 'admin' ? 
             `<td><small style="color:#888;">${ownerName}</small></td>` : '';
 
-        // Estilo para inativos (meio transparente)
         const rowStyle = !p.active ? 'opacity: 0.6; background: #221a1a;' : '';
         const statusLabel = !p.active ? '<br><span style="color:#ff6b6b;font-size:0.7rem;">(INATIVO)</span>' : '';
 
@@ -187,7 +171,8 @@ function renderPropertiesTable(properties) {
                     <strong>${p.title}</strong>
                     ${statusLabel}
                 </td>
-                ${ownerCell} <td>${p.location}</td>
+                ${ownerCell}
+                <td>${p.location}</td>
                 <td><strong>${formatPrice(p.price)}</strong></td>
                 <td>
                     <label class="switch">
@@ -210,11 +195,10 @@ async function togglePropertyActive(id, active) {
         formData.append('active', active);
         await propertiesAPI.update(id, formData);
         
-        // Atualiza a lista localmente sem recarregar tudo do servidor
         const prop = globalPropertiesList.find(p => p._id === id);
         if(prop) prop.active = active;
         
-        filterAdminProperties(); // Redesenha a tabela
+        filterAdminProperties();
         updateDashboardStats();
     } catch(err) {
         alert('Erro ao alterar status');
@@ -449,70 +433,5 @@ function closePropertyModal() { document.getElementById('propertyModal').classLi
 function editProperty(id) { openPropertyModal(id); }
 
 document.addEventListener('DOMContentLoaded', loadPainelDashboard);
-// ============================================
-// MENU MOBILE
-// ============================================
-function toggleSidebar() {
-    console.log('🔘 BOTÃO CLICADO!');
-    
-    const sidebar = document.querySelector('.sidebar');
-    
-    if (!sidebar) {
-        console.error('❌ SIDEBAR NÃO EXISTE!');
-        alert('ERRO: Não encontrei o menu lateral!');
-        return;
-    }
-    
-    // Toggle da classe 'active'
-    sidebar.classList.toggle('active');
-    
-    // Log do estado atual
-    const isOpen = sidebar.classList.contains('active');
-    console.log(isOpen ? '✅ MENU ABERTO!' : '✅ MENU FECHADO!');
-    console.log('Classes da sidebar:', sidebar.className);
-    
-    // Bloqueia/libera scroll da página
-    if (isOpen) {
-        document.body.style.overflow = 'hidden';
-    } else {
-        document.body.style.overflow = '';
-    }
-}
 
-// Fecha o menu ao clicar em qualquer item do menu
-document.querySelectorAll('.menu-item').forEach(item => {
-    item.addEventListener('click', function() {
-        // Se estiver no mobile (tela pequena)
-        if (window.innerWidth <= 768) {
-            const sidebar = document.querySelector('.sidebar');
-            if (sidebar && sidebar.classList.contains('active')) {
-                sidebar.classList.remove('active');
-                document.body.style.overflow = '';
-                console.log('✅ Menu fechado após clicar no item');
-            }
-        }
-    });
-});
-
-// Fecha o menu ao clicar fora dele
-document.addEventListener('click', function(event) {
-    // Só funciona no mobile
-    if (window.innerWidth > 768) return;
-    
-    const sidebar = document.querySelector('.sidebar');
-    const menuToggle = document.querySelector('.mobile-menu-toggle');
-    
-    if (!sidebar || !menuToggle) return;
-    
-    // Se clicou fora da sidebar E fora do botão
-    if (!sidebar.contains(event.target) && 
-        !menuToggle.contains(event.target) && 
-        sidebar.classList.contains('active')) {
-        
-        console.log('👆 Clicou fora, fechando...');
-        sidebar.classList.remove('active');
-        document.body.style.overflow = '';
-    }
-});
-
-console.log('✅ Script mobile menu carregado!');
+console.log('✅ Painel.js carregado');
