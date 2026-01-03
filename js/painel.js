@@ -405,7 +405,12 @@ async function saveProperty(e) {
     
     const fd = new FormData();
     
-    // Adiciona campos um por um (CORRIGIDO)
+    // ⚠️ IMPORTANTE: ADICIONA AS IMAGENS PRIMEIRO!
+    propertyImages.forEach(file => {
+        fd.append('images', file);
+    });
+    
+    // DEPOIS adiciona os campos de texto
     fd.append('title', document.getElementById('propTitle').value);
     fd.append('description', document.getElementById('propDescription').value);
     fd.append('type', document.getElementById('propType').value);
@@ -415,11 +420,11 @@ async function saveProperty(e) {
     fd.append('bedrooms', document.getElementById('propBedrooms').value);
     fd.append('bathrooms', document.getElementById('propBathrooms').value);
     fd.append('garages', document.getElementById('propGarages').value);
-    
-    // Adiciona as imagens
-    propertyImages.forEach(file => {
-        fd.append('images', file);
-    });
+
+    console.log('📤 Enviando FormData:');
+    for (let pair of fd.entries()) {
+        console.log(pair[0], ':', pair[1]);
+    }
 
     try {
         if(editingPropertyId) {
@@ -427,12 +432,12 @@ async function saveProperty(e) {
         } else {
             await propertiesAPI.create(fd);
         }
-        alert('Salvo com sucesso!');
+        alert('✅ Salvo com sucesso!');
         closePropertyModal();
         loadPropertiesTable();
         updateDashboardStats();
     } catch(err) {
-        console.error('Erro ao salvar:', err);
+        console.error('❌ Erro ao salvar:', err);
         alert('Erro ao salvar: ' + (err.message || 'Erro desconhecido'));
     }
 }
