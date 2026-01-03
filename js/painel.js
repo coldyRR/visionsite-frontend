@@ -382,22 +382,74 @@ async function loadPropertyData(id) {
 
 function handleImageUpload(e) {
     const files = Array.from(e.target.files);
+    const MAX_IMAGES = 20; // Ajuste conforme necessário
+    
     if(!editingPropertyId) {
         document.getElementById('imagePreview').innerHTML = '';
         propertyImages = [];
     }
     
+    const currentCount = propertyImages.length;
+    const totalCount = currentCount + files.length;
+    
+    if (totalCount > MAX_IMAGES) {
+        alert(`⚠️ Limite de ${MAX_IMAGES} fotos! Você já selecionou ${currentCount} foto(s).`);
+        return;
+    }
+    
     files.forEach(file => {
+        const fileIndex = propertyImages.length; // Índice atual
         propertyImages.push(file);
+        
         const reader = new FileReader();
         reader.onload = (ev) => {
             const div = document.createElement('div');
             div.className = 'image-preview-item';
-            div.innerHTML = `<img src="${ev.target.result}" style="width:150px;height:150px;object-fit:cover;">`;
+            div.setAttribute('data-index', fileIndex);
+            div.innerHTML = `
+                <img src="${ev.target.result}" style="width:150px;height:150px;object-fit:cover;">
+                <button class="btn-remove-image" onclick="removeImage(${fileIndex})" type="button">
+                    <i class="fas fa-times"></i>
+                </button>
+                <span class="image-name">Foto ${fileIndex + 1}</span>
+            `;
             document.getElementById('imagePreview').appendChild(div);
         };
         reader.readAsDataURL(file);
     });
+}
+
+// NOVA FUNÇÃO PARA REMOVER IMAGEM
+function removeImage(index) {
+    console.log('🗑️ Removendo imagem no índice:', index);
+    
+    // Remove do array
+    propertyImages.splice(index, 1);
+    
+    // Recarrega o preview
+    const preview = document.getElementById('imagePreview');
+    preview.innerHTML = '';
+    
+    // Reconstrói o preview com os índices atualizados
+    propertyImages.forEach((file, newIndex) => {
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+            const div = document.createElement('div');
+            div.className = 'image-preview-item';
+            div.setAttribute('data-index', newIndex);
+            div.innerHTML = `
+                <img src="${ev.target.result}" style="width:150px;height:150px;object-fit:cover;">
+                <button class="btn-remove-image" onclick="removeImage(${newIndex})" type="button">
+                    <i class="fas fa-times"></i>
+                </button>
+                <span class="image-name">Foto ${newIndex + 1}</span>
+            `;
+            preview.appendChild(div);
+        };
+        reader.readAsDataURL(file);
+    });
+    
+    console.log('✅ Imagem removida! Total:', propertyImages.length);
 }
 
 async function saveProperty(e) {
