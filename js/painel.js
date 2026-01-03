@@ -40,7 +40,7 @@ async function loadPainelDashboard() {
         document.getElementById('userInfo').textContent = user.name;
 
         if (user.role === 'admin') {
-            ['leadsMenuItem', 'leadsCard', 'brokersMenuItem'].forEach(id => {
+            ['leadsMenuItem', 'leadsCard', 'brokersMenuItem', 'leadsNavItem', 'brokersNavItem'].forEach(id => {
                 const el = document.getElementById(id);
                 if (el) el.style.display = 'block';
             });
@@ -402,22 +402,38 @@ function handleImageUpload(e) {
 
 async function saveProperty(e) {
     e.preventDefault();
-    const fd = new FormData();
-    ['Title','Description','Type','Price','Location','Area','Bedrooms','Bathrooms','Garages'].forEach(field => {
-        fd.append(field.toLowerCase(), document.getElementById(`prop${field}`).value);
-    });
     
-    propertyImages.forEach(f => fd.append('images', f));
+    const fd = new FormData();
+    
+    // Adiciona campos um por um (CORRIGIDO)
+    fd.append('title', document.getElementById('propTitle').value);
+    fd.append('description', document.getElementById('propDescription').value);
+    fd.append('type', document.getElementById('propType').value);
+    fd.append('price', document.getElementById('propPrice').value);
+    fd.append('location', document.getElementById('propLocation').value);
+    fd.append('area', document.getElementById('propArea').value);
+    fd.append('bedrooms', document.getElementById('propBedrooms').value);
+    fd.append('bathrooms', document.getElementById('propBathrooms').value);
+    fd.append('garages', document.getElementById('propGarages').value);
+    
+    // Adiciona as imagens
+    propertyImages.forEach(file => {
+        fd.append('images', file);
+    });
 
     try {
-        if(editingPropertyId) await propertiesAPI.update(editingPropertyId, fd);
-        else await propertiesAPI.create(fd);
+        if(editingPropertyId) {
+            await propertiesAPI.update(editingPropertyId, fd);
+        } else {
+            await propertiesAPI.create(fd);
+        }
         alert('Salvo com sucesso!');
         closePropertyModal();
         loadPropertiesTable();
         updateDashboardStats();
     } catch(err) {
-        alert('Erro ao salvar: ' + err.message);
+        console.error('Erro ao salvar:', err);
+        alert('Erro ao salvar: ' + (err.message || 'Erro desconhecido'));
     }
 }
 
