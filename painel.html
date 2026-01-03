@@ -10,7 +10,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/mobile-styles.css">
 
     <style>
         /* Toggle Switch */
@@ -20,50 +19,9 @@
         .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
         input:checked + .slider { background-color: #4CAF50; }
         input:checked + .slider:before { transform: translateX(26px); }
-
-        /* CSS FORÇADO PARA O MENU APARECER NO MOBILE */
-        @media (max-width: 768px) {
-            .sidebar {
-                display: block !important;
-                position: fixed !important;
-                top: 0 !important;
-                left: -320px !important; /* Escondido na esquerda */
-                width: 260px !important;
-                height: 100vh !important;
-                background-color: #0d0d0d !important; /* Fundo Preto */
-                z-index: 10000 !important; /* Fica em cima de tudo */
-                transition: left 0.3s ease-in-out !important;
-                box-shadow: 5px 0 15px rgba(0,0,0,0.8) !important;
-                padding-top: 60px !important;
-            }
-
-            /* Classe que faz o menu entrar na tela */
-            .sidebar.active {
-                left: 0 !important;
-            }
-
-            .sidebar .menu-item {
-                display: flex !important;
-                color: #fff !important;
-                padding: 15px 20px !important;
-                border-bottom: 1px solid #333 !important;
-                font-size: 16px !important;
-            }
-            
-            .mobile-menu-toggle {
-                display: flex !important;
-                align-items: center;
-                justify-content: center;
-                z-index: 10001; /* Botão acima do menu se precisar */
-            }
-        }
     </style>
 </head>
 <body>
-
-    <button class="mobile-menu-toggle" onclick="toggleSidebar()">
-        <i class="fas fa-bars"></i>
-    </button>
 
     <div class="painel-container">
         <div class="sidebar">
@@ -156,14 +114,14 @@
                             <tr>
                                 <th>Imagem</th>
                                 <th>Título</th>
-                                <th id="thOwner" style="display:none;">Cadastrado Por</th> <th>Localização</th>
+                                <th id="thOwner" style="display:none;">Cadastrado Por</th>
+                                <th>Localização</th>
                                 <th>Preço</th>
                                 <th>Disponível</th>
                                 <th>Ações</th>
                             </tr>
                         </thead>
-                        <tbody id="propertiesTableBody">
-                            </tbody>
+                        <tbody id="propertiesTableBody"></tbody>
                     </table>
                 </div>
             </div>
@@ -244,7 +202,7 @@
                     <select id="brokerRole" required><option value="corretor">Corretor</option><option value="admin">Administrador</option></select>
                     <small style="color: #888; font-size: 0.85rem;">Administradores têm acesso total ao sistema</small>
                 </div>
-                <div class="form-group"><label>Senha *</label><input type="password" id="brokerPassword" placeholder="Mínimo 6 caracteres"><small style="color: #666; font-size: 0.85rem;" id="passwordHint">Mínimo 6 caracteres</small></div>
+                <div class="form-group"><label>Senha *</label><input type="password" id="brokerPassword" placeholder="Mínimo 6 caracteres"><small style="color: #666; font-size: 0.85rem;">Mínimo 6 caracteres</small></div>
                 <button type="submit" class="btn-primary" style="width: 100%; padding: 14px;"><i class="fas fa-save"></i> Salvar Usuário</button>
             </form>
         </div>
@@ -252,62 +210,5 @@
 
     <script src="js/api.js"></script>
     <script src="js/painel.js"></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            // Referências aos elementos
-            const sidebar = document.querySelector('.sidebar');
-            const container = document.querySelector('.painel-container');
-            const btn = document.querySelector('.mobile-menu-toggle');
-
-            // 1. FUNÇÃO INTELIGENTE: Move o menu dependendo do tamanho da tela
-            function checkLayout() {
-                if (!sidebar) return;
-
-                if (window.innerWidth <= 768) {
-                    // CELULAR: Tira o menu da caixa 'painel-container' e joga no corpo
-                    // Isso evita que ele fique cortado ou escondido
-                    if (sidebar.parentNode !== document.body) {
-                        document.body.appendChild(sidebar);
-                    }
-                } else {
-                    // PC: Devolve o menu para dentro do painel
-                    // Isso garante que o layout do PC fique perfeito
-                    if (sidebar.parentNode !== container) {
-                        container.insertBefore(sidebar, container.firstChild);
-                        sidebar.classList.remove('active'); // Garante limpo no PC
-                        document.body.style.overflow = '';
-                    }
-                }
-            }
-
-            // Executa ao carregar e sempre que redimensionar a tela
-            checkLayout();
-            window.addEventListener('resize', checkLayout);
-
-            // 2. FUNÇÃO DO BOTÃO (Global para o onclick do HTML funcionar)
-            window.toggleSidebar = function() {
-                if (!sidebar) return;
-                sidebar.classList.toggle('active'); // Usa a classe definida no seu CSS no head
-                
-                // Trava o scroll quando aberto
-                if (sidebar.classList.contains('active')) {
-                    document.body.style.overflow = 'hidden';
-                } else {
-                    document.body.style.overflow = '';
-                }
-            };
-
-            // 3. FECHAR MENU AO CLICAR NOS LINKS
-            const menuItems = document.querySelectorAll('.menu-item');
-            menuItems.forEach(item => {
-                item.addEventListener('click', () => {
-                    if (window.innerWidth <= 768) {
-                        sidebar.classList.remove('active');
-                        document.body.style.overflow = '';
-                    }
-                });
-            });
-        });
-    </script>
 </body>
 </html>

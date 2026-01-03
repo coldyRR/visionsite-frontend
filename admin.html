@@ -19,62 +19,9 @@
         .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
         input:checked + .slider { background-color: #4CAF50; }
         input:checked + .slider:before { transform: translateX(26px); }
-
-        /* MOBILE MENU */
-        .mobile-menu-toggle {
-            display: none;
-        }
-
-        @media (max-width: 768px) {
-            .mobile-menu-toggle {
-                display: flex !important;
-                align-items: center !important;
-                justify-content: center !important;
-                position: fixed !important;
-                top: 20px !important;
-                left: 20px !important;
-                z-index: 10001 !important;
-                background: #000000 !important;
-                border: none !important;
-                width: 50px !important;
-                height: 50px !important;
-                border-radius: 50% !important;
-                color: white !important;
-                font-size: 1.5rem !important;
-                cursor: pointer !important;
-                box-shadow: 0 4px 15px rgba(0,0,0,0.5) !important;
-            }
-
-            .sidebar {
-                position: fixed !important;
-                top: 0 !important;
-                left: -300px !important;
-                width: 280px !important;
-                height: 100vh !important;
-                background: #141414 !important;
-                border-right: 1px solid #333 !important;
-                z-index: 10000 !important;
-                transition: left 0.3s ease !important;
-                overflow-y: auto !important;
-                padding: 30px 0 !important;
-            }
-
-            .sidebar.active {
-                left: 0 !important;
-            }
-
-            .main-content {
-                margin-left: 0 !important;
-                padding-top: 80px !important;
-            }
-        }
     </style>
 </head>
 <body>
-
-    <button class="mobile-menu-toggle" onclick="toggleSidebar()">
-        <i class="fas fa-bars"></i>
-    </button>
 
     <div class="painel-container">
         <div class="sidebar">
@@ -263,29 +210,5 @@
 
     <script src="js/api.js"></script>
     <script src="js/painel.js"></script>
-
-    <script>
-        function toggleSidebar() {
-            const sidebar = document.querySelector('.sidebar');
-            if (sidebar) {
-                sidebar.classList.toggle('active');
-                document.body.style.overflow = sidebar.classList.contains('active') ? 'hidden' : '';
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            document.querySelectorAll('.menu-item').forEach(item => {
-                item.addEventListener('click', function() {
-                    if (window.innerWidth <= 768) {
-                        const sidebar = document.querySelector('.sidebar');
-                        if (sidebar && sidebar.classList.contains('active')) {
-                            sidebar.classList.remove('active');
-                            document.body.style.overflow = '';
-                        }
-                    }
-                });
-            });
-        });
-    </script>
 </body>
 </html>
