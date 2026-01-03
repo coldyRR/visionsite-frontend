@@ -679,3 +679,127 @@ ul{list-style:none}
         display: none !important;
     }
 }
+@media (max-width: 768px) {
+    
+    /* Sidebar sempre visível, bem estreita */
+    .sidebar {
+        position: fixed !important;
+        left: 0 !important;
+        top: 0 !important;
+        width: 60px !important; /* Bem fininha */
+        height: 100vh !important;
+        background: #0a0a0a !important; /* Preto total */
+        border-right: 1px solid #222 !important;
+        z-index: 1000 !important;
+        padding: 20px 0 !important;
+        overflow-y: auto !important;
+    }
+    
+    /* Esconde o header (logo e nome) */
+    .sidebar-header {
+        display: none !important;
+    }
+    
+    /* Menu items - só ícones */
+    .sidebar-menu {
+        padding: 0 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 5px !important;
+    }
+    
+    .menu-item {
+        width: 60px !important;
+        height: 60px !important;
+        padding: 0 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        color: #666 !important;
+        border-left: none !important;
+        border-bottom: 3px solid transparent !important;
+        transition: all 0.2s !important;
+    }
+    
+    .menu-item:hover,
+    .menu-item.active {
+        background: #111 !important;
+        color: #c9a961 !important;
+        border-bottom-color: #c9a961 !important;
+    }
+    
+    /* Só mostra o ícone, esconde o texto */
+    .menu-item span {
+        display: none !important;
+    }
+    
+    .menu-item i {
+        font-size: 1.5rem !important;
+        width: auto !important;
+    }
+    
+    /* Main content empurrado pra direita */
+    .main-content {
+        margin-left: 60px !important;
+        width: calc(100% - 60px) !important;
+        padding: 20px 10px !important;
+    }
+    
+    /* Ajustes gerais */
+    .page-header {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 15px !important;
+    }
+    
+    .page-title {
+        font-size: 1.5rem !important;
+    }
+    
+    .stats-cards {
+        grid-template-columns: 1fr !important;
+        gap: 15px !important;
+    }
+    
+    .stat-card {
+        padding: 15px !important;
+    }
+    
+    .table-container {
+        overflow-x: auto !important;
+        margin: 0 -10px !important;
+    }
+    
+    .table {
+        min-width: 600px !important;
+        font-size: 0.85rem !important;
+    }
+    
+    .table th,
+    .table td {
+        padding: 10px 8px !important;
+    }
+    
+    .modal-content {
+        width: 95% !important;
+        max-width: 95% !important;
+        padding: 20px !important;
+    }
+    
+    .form-row {
+        grid-template-columns: 1fr !important;
+    }
+    
+    /* Botões menores */
+    .btn-primary,
+    .btn-primary-panel,
+    .btn-logout {
+        font-size: 0.85rem !important;
+        padding: 10px 15px !important;
+    }
+    
+    /* Esconde botão hambúrguer se existir */
+    .mobile-menu-toggle {
+        display: none !important;
+    }
+}
