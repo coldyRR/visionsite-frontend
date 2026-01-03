@@ -407,7 +407,7 @@ async function saveProperty(e) {
         fd.append(field.toLowerCase(), document.getElementById(`prop${field}`).value);
     });
     
-    propertyImages.forEach(f => fd.append('photos', f));
+    propertyImages.forEach(f => fd.append('images', f));
 
     try {
         if(editingPropertyId) await propertiesAPI.update(editingPropertyId, fd);
